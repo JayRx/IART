@@ -102,5 +102,8 @@ class Piece:
         self.row, self.col = cell
         self.calc_pos()
 
+    def get_color(self):
+        return self.color
+
     def refresh_board(self, board):
         self.board = board

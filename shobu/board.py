@@ -17,16 +17,21 @@ class Board:
         self.create_board()
         self.calc_moves()
 
+
+
+
+    """Function that draws lines of the boards"""
     def draw_outline(self, win):
         for row in range(ROWS):
             for col in range(ROWS):
                 pygame.draw.rect(win, OUTLINE, (self.x, self.y, self.BACKGROUND_SIZE, self.BACKGROUND_SIZE))
-
+    """Function that draws the squares og the boards """
     def draw_squares(self, win):
         for row in range(ROWS):
             for col in range(ROWS):
                 pygame.draw.rect(win, self.color, (self.x + (SQUARE_SIZE + BOARD_OUTLINE) * col, self.y + (SQUARE_SIZE + BOARD_OUTLINE) * row, SQUARE_SIZE, SQUARE_SIZE))
 
+    """function that creates game board information in the beining  """
     def create_board(self):
         for row in range(ROWS):
             self.board.append([])
@@ -37,14 +42,15 @@ class Board:
                     self.board[row].append(Piece(row, col, BLACK, self))
                 else:
                     self.board[row].append(0)
-
+    """ function that draws the game board """
     def draw(self, win):
+        #Desenha linhas e quadrados
         self.draw_outline(win)
         self.draw_squares(win)
         for row in range(ROWS):
             for col in range(COLS):
                 piece = self.board[row][col]
-                if piece != 0:
+                if piece != 0: # se é zero, não tem peça no quadrado do tabuleiro, guardados numa lista
                     piece.draw(win)
 
     def get_pos(self):
@@ -64,15 +70,16 @@ class Board:
 
     def get_board(self):
         return self.board
-
+    """Function that calculates the possible moves when selection a piece """
     def calc_moves(self):
         for row in range(ROWS):
             for col in range(COLS):
                 cell = self.board[row][col]
-                if cell != 0:
+                if cell != 0: # if the cell have a piece
                     cell.calc_moves()
                     cell.calc_aggressive_moves()
 
+    """ Change a piece of a board"""
     def change_piece_cell(self, piece, cell):
         print('From board.py, Board w/ index: ' + str(self.index))
         row, col = piece.get_cell()
