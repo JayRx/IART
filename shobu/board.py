@@ -71,12 +71,15 @@ class Board:
                 cell = self.board[row][col]
                 if cell != 0:
                     cell.calc_moves()
+                    cell.calc_aggressive_moves()
 
     def change_piece_cell(self, piece, cell):
-        print(self.index)
+        print('From board.py, Board w/ index: ' + str(self.index))
         row, col = piece.get_cell()
         new_row, new_col = cell
-        print(piece)
+
+        print('From board.py, colour of chosen Piece ' + str(piece))
+        # updates board w/ new piece position
         self.board[row][col] = 0
         self.board[new_row][new_col] = piece
         piece.set_cell(cell)

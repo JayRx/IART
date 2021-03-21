@@ -1,5 +1,5 @@
 import pygame
-from shobu.constants import ROWS, COLS, SQUARE_SIZE, BOARD_OUTLINE, WIDTH, HEIGHT, BACKGROUND, RED, GREEN, BLUE, LIGHT_BROWN, DARK_BROWN, WHITE, BOARD_PADDING, BLACK, LINE_HEIGHT
+from shobu.constants import ROWS, COLS, SQUARE_SIZE, BOARD_OUTLINE, WIDTH, HEIGHT, BACKGROUND, RED, GREEN, BLUE, LIGHT_BROWN, DARK_BROWN, WHITE, BOARD_PADDING, BLACK, LINE_HEIGHT, VIOLET
 from shobu.board import Board
 
 FPS = 60
@@ -34,8 +34,11 @@ def main():
     run = True
     clock = pygame.time.Clock()
 
+    # colors the screen with white
     WIN.fill(WHITE)
-    pygame.draw.rect(WIN, BLACK, (BOARD_PADDING, DISPLAY_SIZE // 2 - LINE_HEIGHT // 2, DISPLAY_SIZE - 2 * BOARD_PADDING, LINE_HEIGHT))
+
+    # draws the rope, dividing each of the player's Homeboards
+    pygame.draw.rect(WIN, BLACK, (BOARD_PADDING, DISPLAY_SIZE // 2 - LINE_HEIGHT // 2, DISPLAY_SIZE - 2 * BOARD_PADDING, LINE_HEIGHT) )
 
     boards = [Board(0, 0, DARK_BROWN, 0), Board(0, 1, LIGHT_BROWN, 1), Board(1, 0, DARK_BROWN, 2), Board(1, 1, LIGHT_BROWN, 3)]
 
@@ -52,18 +55,23 @@ def main():
                 selected_x = None
                 selected_y = None
                 if selected_board != None:
+
                     cell = get_cell_hover_mouse(selected_board, pos)
                     board_x, board_y = selected_board.get_pos()
                     row, col = cell
+
                     row, col = int(row), int(col)
                     if 0 <= row < ROWS:
                         if 0 <= col < COLS:
                             selected_x = board_x + (SQUARE_SIZE + BOARD_OUTLINE) * col + SQUARE_SIZE // 2
                             selected_y = board_y + (SQUARE_SIZE + BOARD_OUTLINE) * row + SQUARE_SIZE // 2
+
                             selected_cell = row, col
                             selected_cell_aux = [row, col]
+
                             if prev_selected_piece != None and prev_selected_piece != 0:
-                                print(prev_selected_piece.get_moves())
+                                # checks the moves and moves the piece from its place
+                                print('In main.py, possible moves w/ piece: ' + str(prev_selected_piece.get_moves()) )
                                 if selected_cell_aux in prev_selected_piece.get_moves():
                                     selected_board.change_piece_cell(prev_selected_piece, selected_cell)
                                     selected_cell, selected_x, selected_y, prev_selected_piece = None, None, None, None
@@ -71,6 +79,7 @@ def main():
                 else:
                     prev_selected_piece = None
 
+        # board drawing
         for board in boards:
             board.draw(WIN)
             if selected_x != None and selected_y != None:
@@ -82,12 +91,25 @@ def main():
                     pygame.draw.circle(WIN, BLUE, (selected_x, selected_y), radius)
                     moves = piece.get_moves()
                     board_x, board_y = selected_board.get_pos()
+
+                    # draws the possible moves (w/ green colour) for the selected piece
                     for move in moves:
                         row, col = move
                         move_x = board_x + (SQUARE_SIZE + BOARD_OUTLINE) * col + SQUARE_SIZE // 2
                         move_y = board_y + (SQUARE_SIZE + BOARD_OUTLINE) * row + SQUARE_SIZE // 2
                         pygame.draw.circle(WIN, GREEN, (move_x, move_y), radius)
+
+                    # draws the possible aggressive moves (w/violet color) for the selected piece (testing)
+                    aggressive_moves = piece.get_aggressive_moves()
+                    # print('aggressive_moves: ' + str(aggressive_moves))
+                    for aggressive_move in aggressive_moves:
+                        row, col = move
+                        move_x = board_x + (SQUARE_SIZE + BOARD_OUTLINE) * col + SQUARE_SIZE // 2
+                        move_y = board_y + (SQUARE_SIZE + BOARD_OUTLINE) * row + SQUARE_SIZE // 2
+                        pygame.draw.circle(WIN, VIOLET, (move_x, move_y), radius)
+
                 else:
+                    # draws a red circle (for now, just to show that the chosen cell can't be played)
                     pygame.draw.circle(WIN, RED, (selected_x, selected_y), radius)
 
         pygame.display.update()
