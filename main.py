@@ -5,7 +5,7 @@ from shobu.Model.Board import Board
 from shobu.Model.Game import Game
 from shobu.Model.Player import Player
 from shobu.Model.constants import SQUARE_SIZE, BOARD_OUTLINE, WIDTH, GREEN, BLUE, \
-    LIGHT_BROWN, DARK_BROWN, BOARD_PADDING, BLACK ,DISPLAY_SIZE
+    LIGHT_BROWN, DARK_BROWN, BOARD_PADDING, BLACK, DISPLAY_SIZE, WHITE
 from shobu.View.BoardView import BoardView
 
 from shobu.View.GameView import GameView
@@ -13,8 +13,9 @@ from shobu.View.GameView import GameView
 FPS = 60
 
 WIN = pygame.display.set_mode((DISPLAY_SIZE, DISPLAY_SIZE))  # Display game
->>>>>>> Stashed changes
+
 pygame.display.set_caption('Shobu')
+
 
 def get_board_hover_mouse(boards, pos):
     x, y = pos
@@ -26,14 +27,13 @@ def get_board_hover_mouse(boards, pos):
                 return board
     return None
 
+
 def get_cell_hover_mouse(board, pos):
     x, y = pos
     board_x, board_y = board.get_pos()
     row = (y - board_y) // (SQUARE_SIZE + BOARD_OUTLINE)
     col = (x - board_x) // (SQUARE_SIZE + BOARD_OUTLINE)
-<<<<<<< Updated upstream
-    return row, col
-=======
+
     return row, col  # returna posição da célula
 
 
@@ -132,7 +132,6 @@ def Passive_mode(color_playing, radius, run, boards, passive_move, previous_cell
                             first_passive_move = False
                             selected_board2.draw(WIN)
 
->>>>>>> Stashed changes
 
 def main():
     radius = SQUARE_SIZE // 2 - 10
@@ -144,40 +143,32 @@ def main():
               Board(1, 1, LIGHT_BROWN, 3)]
     # Passive move
 
-    player1 = Player()
-    player2 = Player()
+    player1 = Player(BLACK)
+    player2 = Player(WHITE)
     game = Game(boards, player1, player2)
     clock.tick(FPS)
     game_view = GameView(game, WIN)
     board_view = BoardView()
 
-    while run:
-        clock.tick(FPS)
+    clock.tick(FPS)
 
     while run:
-
         game_view.drawGame(WIN, board_view, game)
 
         pygame.display.update()
-
-
-
-
 
         color_playing = BLACK
         passive_move = None
         previous_cell = None
 
-    
-    
         Passive_mode(color_playing, radius, run, boards, passive_move, previous_cell)
 
     # Continuar jogo
     run = True
     while run:
-
         game_view.drawGame(WIN, board_view, game)
 
         pygame.display.update()
+
 
 main()
