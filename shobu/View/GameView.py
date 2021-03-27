@@ -1,7 +1,7 @@
 from shobu.View.BoardView import BoardView
 
 from shobu.Model.constants import BLACK, WHITE, OUTLINE, ROWS, COLS, SQUARE_SIZE, BOARD_OUTLINE, BOARD_PADDING, \
-    LINE_HEIGHT, DISPLAY_SIZE
+    LINE_HEIGHT, DISPLAY_SIZE, Action
 
 import pygame
 
@@ -33,3 +33,23 @@ class GameView:
 
         self.__player1_view.draw(window_game, game.get_player1())
         self.__player2_view.draw(window_game, game.get_player2())
+
+    def get_next_command(self, position_mouse):
+        action = Action
+        run = True
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:  # se clicamos para sair do jogo
+                    action = Action.Quit
+                    return action
+
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    action = Action.buttonDown
+                    position_mouse = pygame.mouse.get_pos()
+                    return action
+                elif event.type == pygame.K_ESCAPE:
+                    action = Action.Esc
+                    return action
+
+    def get_window_game(self):
+        return self.__window_game
