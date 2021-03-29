@@ -2,16 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="73bdf941-09a4-42da-a6c1-1fc22c093895" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/IART.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/csv-plugin.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shobu/board.py" beforeDir="false" afterPath="$PROJECT_DIR$/shobu/board.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shobu/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/shobu/constants.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shobu/piece.py" beforeDir="false" afterPath="$PROJECT_DIR$/shobu/piece.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shobu/View/MenuView.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/csv-plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/csv-plugin.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shobu/Controller/GameController.py" beforeDir="false" afterPath="$PROJECT_DIR$/shobu/Controller/GameController.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shobu/Model/Board.py" beforeDir="false" afterPath="$PROJECT_DIR$/shobu/Model/Board.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shobu/Model/Player.py" beforeDir="false" afterPath="$PROJECT_DIR$/shobu/Model/Player.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shobu/Model/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/shobu/Model/constants.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shobu/State/GameState.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shobu/State/PlayerState.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/shobu/State/State.py" beforeDir="false" afterPath="$PROJECT_DIR$/shobu/State/State.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shobu/View/BoardView.py" beforeDir="false" afterPath="$PROJECT_DIR$/shobu/View/BoardView.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shobu/View/GameView.py" beforeDir="false" afterPath="$PROJECT_DIR$/shobu/View/GameView.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shobu/View/PieceView.py" beforeDir="false" afterPath="$PROJECT_DIR$/shobu/View/PieceView.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shobu/View/PlayerView.py" beforeDir="false" afterPath="$PROJECT_DIR$/shobu/View/PlayerView.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,6 +128,7 @@
       <updated>1616246034033</updated>
       <workItem from="1616246037285" duration="39520000" />
       <workItem from="1616785032069" duration="22578000" />
+      <workItem from="1616939363875" duration="29386000" />
     </task>
     <servers />
   </component>
@@ -145,14 +151,59 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>78</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>72</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/shobu/Model/Player.py</url>
+          <line>61</line>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/shobu/Model/Player.py</url>
+          <line>80</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>93</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>170</line>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>175</line>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/shobu/View/GameView.py</url>
+          <line>32</line>
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/shobu/Model/Board.py</url>
+          <line>87</line>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/shobu/View/PieceView.py</url>
-          <line>14</line>
-          <option name="timeStamp" value="1" />
+          <line>15</line>
+          <option name="timeStamp" value="30" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/IART$main.coverage" NAME="main Coverage Results" MODIFIED="1616811175954" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/IART$main.coverage" NAME="main Coverage Results" MODIFIED="1616975876349" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

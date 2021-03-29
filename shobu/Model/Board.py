@@ -76,7 +76,7 @@ class Board:
 
     """Função para mudar posição da peça na matriz representativa do board """
     def change_piece_cell(self, piece, cell):
-        print('From Board.py, Board w/ index: ' + str(self.index))
+        print('From Board.py, Board w/ index: ' + str(self.__index))
         row, col = piece.get_cell()
         new_row, new_col = cell
 
@@ -84,5 +84,7 @@ class Board:
         # updates board w/ new piece position
         self.__board_info[row][col] = 0
         self.__board_info[new_row][new_col] = piece
+        #Actualizar posicionamento da peça na matriz do board e no ecrã
         piece.set_cell(cell)
+        self.calc_pos_piece_in_board(piece)
 

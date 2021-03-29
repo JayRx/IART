@@ -33,9 +33,10 @@ class BoardView:
         self.draw_outline(board, window_game)
         self.draw_squares(board, window_game)
 
+        aux_board = board
         # desenhar peças
         for row in range(ROWS):
             for col in range(COLS):
-                piece = board.get_board_info()[row][col]
+                piece = aux_board.get_board_info()[row][col]
                 if piece != 0:  # se é zero, não tem peça no quadrado do tabuleiro, guardados numa lista
-                    piece_view.draw(window_game, piece)
+                    piece_view.draw(window_game, aux_board.get_board_info()[row][col])

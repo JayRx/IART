@@ -31,3 +31,11 @@ class Action(Enum):
     buttonDown = 1
     Esc = 2
     Quit = 3
+
+
+class MoveDirect(Enum):
+    diagonal = 1
+    front = 2
+    down = 3
+    left = 4
+    right = 5
