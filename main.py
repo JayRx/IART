@@ -6,7 +6,8 @@ from shobu.Model.Board import Board
 from shobu.Model.Game import Game
 from shobu.Model.Player import Player
 from shobu.Model.constants import SQUARE_SIZE, BOARD_OUTLINE, WIDTH, GREEN, BLUE, \
-    LIGHT_BROWN, DARK_BROWN, BOARD_PADDING, BLACK, DISPLAY_SIZE, WHITE, MoveDirect
+    LIGHT_BROWN, DARK_BROWN, BOARD_PADDING, BLACK, DISPLAY_SIZE, WHITE, MoveDirect, \
+        ROWS, COLS
 from shobu.View.BoardView import BoardView
 
 from shobu.View.GameView import GameView
@@ -15,7 +16,7 @@ FPS = 60
 
 WIN = pygame.display.set_mode((DISPLAY_SIZE, DISPLAY_SIZE))  # Display game
 
-pygame.display.set_caption('Shobu')
+# pygame.display.set_caption('Shobu')
 
 
 def get_board_hover_mouse(boards, pos):
@@ -59,11 +60,12 @@ def passive_mode1(player, color_playing, radius, run, boards, game_view):
                 col = int(col)
                 last_pos = row, col
 
+                ''' estas 3 linhas são necessárias? '''
                 board_x, board_y = selected_board.get_pos()  # gives the position of the board we are selecting with the mouse
                 selected_x = board_x + (SQUARE_SIZE + BOARD_OUTLINE) * col + SQUARE_SIZE // 2
                 selected_y = board_y + (SQUARE_SIZE + BOARD_OUTLINE) * row + SQUARE_SIZE // 2
 
-                if selected_board is not None:  # Obter peça
+                if selected_board is not None:  # Obter peça (se tiver sido selecionada alguma)
                     piece = selected_board.get_cell(row, col)  # Obter possível peça ou quadrado vazio
 
                     if piece != 0 and color_playing == piece.get_color():
@@ -133,10 +135,56 @@ def passive_mode2(moves, board_selected, boards, piece, game_view):
     return False
 
 
-def evaluate_move(last_pos, new_pos):
+def evaluate_move(last_pos, new_pos):           # heurística?
     info_move = []
     if new_pos[0] == last_pos[0] and new_pos[1] > last_pos:
         info_move.append(MoveDirect.right)
+
+# def objective_test(State B|Pla|Yl|Xl)
+def objective_test(boards, player):
+
+    if player.get_color() == BLACK:
+        player_to_beat_color = WHITE
+    elif player.get_color() == WHITE:
+        player_to_beat_color = BLACK
+    else:
+        # checks if a invalid player was created
+        print("invalid player")
+        return
+
+    # checks if there is a board in which a player has removed all the opponent's pieces
+    opponent_beaten = False
+    opponent_present = False
+    for board in boards:
+        for row in range(ROWS):
+            for col in range(COLS):
+
+                cell_content = board.get_cell(row, col) # 0 if empty, rgb color tuple if piece is present
+                if cell_content != 0:
+                    if cell_content.get_color() == player_to_beat_color:
+                        opponent_present = True
+                        print("you haven't won to " + str(player_to_beat_color) + " in board #" + str(board.get_index()) )
+                        break
+
+            if opponent_present:
+                # stops searching in this board as there is at least one opponent piece
+                break
+
+        if opponent_present == False:
+            # checks if a opponent's piece WASN'T found, in the current board
+            # if yes, opponent is beaten!
+            opponent_beaten = True
+            break
+        else:
+            opponent_present = False
+
+    if opponent_beaten == True and player_to_beat_color == WHITE :
+        return 1    # Player 1 wins
+    elif opponent_beaten == True and player_to_beat_color == BLACK :
+        return 2    # Player 2 wins
+    else:
+        # game not finished (should also return a 0 when it's a draw... should depend on the State?)
+        return -1
 
 
 def main():
@@ -172,11 +220,17 @@ def main():
         aux_boards = game.get_boards()
         passive_mode1(player1, player1.get_color(), radius, run, aux_boards, game_view)
         print("out")
+        res = objective_test(boards,player1)
+        if res != 0:
+            print("game isn't over!")
 
         game_view = GameView(game, WIN)
         game_view.draw_game()
         pygame.display.update()
         passive_mode1(player2, player2.get_color(), radius, run, game.get_boards(), game_view)
+        res = objective_test(boards,player2)
+        if res != 0:
+            print("game isn't over!")
 
 
 """
