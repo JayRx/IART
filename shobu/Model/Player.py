@@ -15,9 +15,6 @@ class Player:
     def get_state(self):
         return self.__win_state
 
-
-
-
     def calc_moves2(self, board, piece):
         self.__moves = []
         self.__row = piece.get_row()
@@ -29,37 +26,30 @@ class Player:
 
             # RIGHT
             if self.__row < ROWS - 1 - i:
-
                 self.__moves.append([self.__row + 1 + i, self.__col])
 
             # DOWN
             if self.__col > i:
-
                 self.__moves.append([self.__row, self.__col - 1 - i])
 
             # UP
             if self.__col < COLS - 1 - i:
-
                 self.__moves.append([self.__row, self.__col + 1 + i])
 
             # LEFT DOWN
             if self.__row > i and self.__col > i:
-
                 self.__moves.append([self.__row - 1 - i, self.__col - 1 - i])
 
             # RIGHT DOWN
             if self.__row < ROWS - 1 - i and self.__col > i:
-
                 self.__moves.append([self.__row + 1 + i, self.__col - 1 - i])
 
             # LEFT UP
             if self.__row > i and self.__col < COLS - 1 - i:
-
                 self.__moves.append([self.__row - 1 - i, self.__col + 1 + i])
 
             # RIGHT UP
             if self.__row < ROWS - 1 - i and self.__col < COLS - 1 - i:
-
                 self.__moves.append([self.__row + 1 + i, self.__col + 1 + i])
 
         aux_moves = self.__moves.copy()  # evita algum valor ser ignorado , quando removemos vários elementos
@@ -70,7 +60,7 @@ class Player:
             if cell != 0 and self.get_color() != cell.get_color():
                 continue
 
-            elif cell !=0 and self.get_color() == cell.get_color():
+            elif cell != 0 and self.get_color() == cell.get_color():
 
                 aux_moves.remove(move)
         self.__moves = aux_moves
@@ -170,8 +160,8 @@ class Player:
         for move in moves:
             if (piece_to_move.get_row() + vector_move[0]) == move[0] and (piece_to_move.get_col() + vector_move[1]) == \
                     move[1]:
-
                 result_moves.append(move)
+
         self.__aggressive_moves = result_moves
 
     def get_color(self):

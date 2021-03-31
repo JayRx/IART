@@ -80,7 +80,7 @@ def passive_mode1(player, color_playing, radius, run, boards, game_view):
                     pygame.display.update()
 
                     vector = vector[0] - aux_row, vector[1] - aux_col  # vector do movimento
-                    return vector, selected_board.get_color()  # return vector movimento, cor do board onde foi o mov passivo
+                    return selected_board.get_color(), vector  # return vector movimento, cor do board onde foi o mov passivo
         else:
             continue
 
@@ -185,17 +185,19 @@ def active_mode2(moves, board_select, boards, piece, game_view,vector_move):
                         if selected_board2.get_board_info()[row][col] != 0:
                             # verificar se tem peça que pode ser empurrada
                             aux_piece = selected_board2.get_board_info()[row][col]
-                            aux_piece2 = aux_piece.get_cell()[0] + vector_move[0], aux_piece.get_cell()[1] + vector_move[1]
+                            aux_piece2 = aux_piece.get_row() + vector_move[0], aux_piece.get_col() + vector_move[1]
                             result = selected_board2.change_piece_cell(aux_piece, aux_piece2)#empurramos peça, mudando de célula
 
                             if result is not True:  # se peça a ser empurrada, não alocada no tabuleiro, é porque foi empurrada para fora
 
-                                selected_board2.get_board_info()[row][col] = 0  # eliminiamos peça
+                                #selected_board2.get_board_info()[row][col] = 0  # eliminiamos peça
                                 selected_board2.change_piece_cell(piece, active_move)  # movemos a peça que empurrou
                             else:
                                 selected_board2.change_piece_cell(piece, active_move) #mover peça para o espaço vazio de onde estava peça que foi empurrada mas não eliminada
                         else:
                             selected_board2.change_piece_cell(piece, active_move)
+
+
                         move_done_pos = row, col
                         game_view.draw_game()
                         return True, move_done_pos
@@ -313,7 +315,7 @@ def main():
         aux_list = player1.get_agressive_moves()
         """
 
-        active_mode1(run, result[0], player1.get_color(), player1, radius, aux_boards, game_view, result[0])
+        active_mode1(run, result[0], player1.get_color(), player1, radius, aux_boards, game_view, result[1])
 
         print("hey")
 
@@ -329,7 +331,7 @@ def main():
         pygame.display.update()
         result = passive_mode1(player2, player2.get_color(), radius, run, aux_boards, game_view)
 
-        active_mode1(run, result[0], player2.get_color(), player2, radius, aux_boards, game_view, result[0])
+        active_mode1(run, result[0], player2.get_color(), player2, radius, aux_boards, game_view, result[1])
 
         print(run)
     # passive_mode1(player2, player2.get_color(), radius, run, game.get_boards(), game_view)
