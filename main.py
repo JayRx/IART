@@ -177,9 +177,9 @@ def active_mode2(moves, board_select, boards, piece, game_view,vector_move):
 
                         #faltam apenas os casos de empurrar duas casas quando peça exatamente à frente da que ataca
                         # deixar de selecionar peças à vontade
-                       # vector_move2 = (row - vector_move[0] )//2,(col - vector_move[1] )//2
+                        #vector_move2 = (row - vector_move[0] )//2 ,(col - vector_move[1] )//2
 
-
+                       #aux_piece2 = piece.get_cell()[0] + vector_move2[0], piece.get_cell()[1] + vector_move2[1]
 
 
                         if selected_board2.get_board_info()[row][col] != 0:
