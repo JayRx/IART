@@ -425,6 +425,7 @@ def main():
         res = objective_test(boards,player2)
         if res != 0:
             print("game isn't over!")
+        # terminar quando for "gameover"    (testar)
 
         print(run)
     # passive_mode1(player2, player2.get_color(), radius, run, game.get_boards(), game_view)
@@ -437,3 +438,5 @@ def main():
         game_view.drawGame(WIN, board_view, game)
 
         pygame.display.update()"""
+
+main()
