@@ -4,8 +4,6 @@
     <list default="true" id="73bdf941-09a4-42da-a6c1-1fc22c093895" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shobu/Model/Board.py" beforeDir="false" afterPath="$PROJECT_DIR$/shobu/Model/Board.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shobu/Model/Player.py" beforeDir="false" afterPath="$PROJECT_DIR$/shobu/Model/Player.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,7 +120,7 @@
       <workItem from="1616785032069" duration="22578000" />
       <workItem from="1616939363875" duration="29386000" />
       <workItem from="1617011851969" duration="25300000" />
-      <workItem from="1617206114939" duration="17513000" />
+      <workItem from="1617206114939" duration="19497000" />
     </task>
     <servers />
   </component>
@@ -167,22 +165,27 @@
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/main.py</url>
           <line>207</line>
-          <option name="timeStamp" value="57" />
+          <option name="timeStamp" value="60" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>199</line>
-          <option name="timeStamp" value="58" />
+          <url>file://$PROJECT_DIR$/shobu/Model/Player.py</url>
+          <line>77</line>
+          <option name="timeStamp" value="61" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>204</line>
-          <option name="timeStamp" value="59" />
+          <url>file://$PROJECT_DIR$/shobu/Model/Player.py</url>
+          <line>97</line>
+          <option name="timeStamp" value="62" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/shobu/Model/Player.py</url>
+          <line>147</line>
+          <option name="timeStamp" value="63" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/IART$main.coverage" NAME="main Coverage Results" MODIFIED="1617238190245" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/IART$main.coverage" NAME="main Coverage Results" MODIFIED="1617239985229" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

@@ -180,7 +180,7 @@ def active_mode2(moves, board_select, boards, piece, game_view, vector_move):
                         if selected_board2.get_board_info()[row][col] != 0:
                             # verificar se tem peça que pode ser empurrada
                             aux_piece = selected_board2.get_board_info()[row][col]
-                            aux_cell_dest = aux_piece.get_row() + vector_move[0], aux_piece.get_col() + vector_move[1]
+                            aux_cell_dest = aux_piece.get_row() + vector_move[0] // 2, aux_piece.get_col() + vector_move[1] //2
 
                             result = selected_board2.change_piece_cell(aux_piece,
                                                                        aux_cell_dest)  # empurramos peça, mudando de célula
