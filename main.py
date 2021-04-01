@@ -13,6 +13,8 @@ from shobu.View.BoardView import BoardView
 
 from shobu.View.GameView import GameView
 
+from shobu.Heuristics.Heuristics import *
+
 FPS = 60
 
 WIN = pygame.display.set_mode((DISPLAY_SIZE, DISPLAY_SIZE))  # Display game
@@ -76,7 +78,6 @@ def passive_mode1(player, color_playing, radius, run, boards, game_view):
                         aux_result = passive_mode2(moves, selected_board, boards, piece, game_view)
                         run2 = aux_result[0]
                         vector = aux_result[1]
-                        print("SDadas")
 
                     game_view.draw_game()
                     pygame.display.update()
@@ -286,7 +287,6 @@ def active_mode1(run, color_board_played, color_playing, player, radius, boards,
                         aux_result = active_mode2(moves, selected_board, boards, piece, game_view, vector_move)
                         run2 = aux_result[0]
                         vector = aux_result[1]
-                        print("active mode")
 
                     game_view.draw_game()
                     pygame.display.update()
@@ -335,13 +335,14 @@ def main():
 
     game_controller = GameController(game, game_view)
 
+    heuristics = Heuristics()
+
     while run:
         game_controller.start()
         # pygame.draw.circle(WIN, GREEN, (383.0, 435.0), radius)
         pygame.display.update()
         aux_boards = game.get_boards()
         result = passive_mode1(player1, player1.get_color(), radius, run, aux_boards, game_view)
-        print("out")
 
         game_view = GameView(game, WIN)
         game_view.draw_game()
@@ -353,8 +354,8 @@ def main():
         """
         # aggressive mode
         active_mode1(run, result[0], player1.get_color(), player1, radius, aux_boards, game_view, result[1])
-
-        print("hey")
+        heuristics.calc(aux_boards, player1)
+        heuristics.print_value()
 
         """for move in aux_list:
             row, col = move
@@ -370,8 +371,9 @@ def main():
 
         # aggressive mode
         active_mode1(run, result[0], player2.get_color(), player2, radius, aux_boards, game_view, result[1])
+        heuristics.calc(aux_boards, player2)
+        heuristics.print_value()
 
-        print(run)
     # passive_mode1(player2, player2.get_color(), radius, run, game.get_boards(), game_view)
 
 
