@@ -95,6 +95,7 @@ class Player:
         self.__col = piece.get_col()
 
     def agr_move_cal(self, board_to_play, vector_move, piece_to_move):
+        # gets all possible aggressive moves (includes only moves to empty cells and opponent stones)
         moves = self.calc_moves2(board_to_play, piece_to_move)
 
         result_moves = []

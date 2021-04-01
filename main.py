@@ -351,7 +351,7 @@ def main():
         player1.agr_move_cal(aux_boards[2], result[0], piece)
         aux_list = player1.get_agressive_moves()
         """
-
+        # aggressive mode
         active_mode1(run, result[0], player1.get_color(), player1, radius, aux_boards, game_view, result[1])
 
         print("hey")
@@ -368,6 +368,7 @@ def main():
         pygame.display.update()
         result = passive_mode1(player2, player2.get_color(), radius, run, aux_boards, game_view)
 
+        # aggressive mode
         active_mode1(run, result[0], player2.get_color(), player2, radius, aux_boards, game_view, result[1])
 
         print(run)
