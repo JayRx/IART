@@ -355,7 +355,7 @@ def main():
         active_mode1(run, result[0], player1.get_color(), player1, radius, aux_boards, game_view, result[1])
 
         res = game_controller.objective_test(aux_boards, player1)
-        if res != 0:
+        if res == -1:
             print("game isn't over!")
 
         heuristics.calc(aux_boards, player1)
@@ -377,7 +377,7 @@ def main():
         active_mode1(run, result[0], player2.get_color(), player2, radius, aux_boards, game_view, result[1])
 
         res = game_controller.objective_test(aux_boards, player2)
-        if res != 0:
+        if res == -1:
             print("game isn't over!")
         # terminar quando for "gameover"    (testar)
 
