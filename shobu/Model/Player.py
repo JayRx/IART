@@ -2,6 +2,7 @@ from shobu.Model.constants import ROWS, COLS
 from shobu.Model.Board import Board
 
 
+
 class Player:
 
     def __init__(self, color):
@@ -15,127 +16,104 @@ class Player:
     def get_state(self):
         return self.__win_state
 
-    def calc_moves(self, board,piece):
+    def calc_moves2(self, board, piece):
         self.__moves = []
         self.__row = piece.get_row()
         self.__col = piece.get_col()
         for i in range(2):
-            #LEFT
+            # LEFT
             if self.__row > i:
-                if i == 1:
-                    if board.get_cell(self.__row - i, self.__col) == 0:
-                        self.__moves.append([self.__row - 1 - i, self.__col])
-                else:
-                    self.__moves.append([self.__row - 1 - i, self.__col])
+                self.__moves.append([self.__row - 1 - i, self.__col])
 
-            #RIGHT
+            # RIGHT
             if self.__row < ROWS - 1 - i:
-                if i == 1:
-                    if board.get_cell(self.__row + i, self.__col) == 0:
-                        self.__moves.append([self.__row + 1 + i, self.__col])
-                else:
-                    self.__moves.append([self.__row + 1 + i, self.__col])
+                self.__moves.append([self.__row + 1 + i, self.__col])
 
-            #DOWN
+            # DOWN
             if self.__col > i:
-                if i == 1:
-                    if board.get_cell(self.__row, self.__col - i) == 0:
-                        self.__moves.append([self.__row, self.__col - 1 - i])
-                else:
-                    self.__moves.append([self.__row, self.__col - 1 - i])
+                self.__moves.append([self.__row, self.__col - 1 - i])
 
-            #UP
+            # UP
             if self.__col < COLS - 1 - i:
-                if i == 1:
-                    if board.get_cell(self.__row, self.__col + i) == 0:
-                        self.__moves.append([self.__row, self.__col + 1 + i])
-                else:
-                    self.__moves.append([self.__row, self.__col + 1 + i])
+                self.__moves.append([self.__row, self.__col + 1 + i])
 
-            #LEFT DOWN
+            # LEFT DOWN
             if self.__row > i and self.__col > i:
-                if i == 1:
-                    if board.get_cell(self.__row - i, self.__col - i) == 0:
-                        self.__moves.append([self.__row - 1 - i, self.__col - 1 - i])
-                else:
-                    self.__moves.append([self.__row - 1 - i, self.__col - 1 - i])
+                self.__moves.append([self.__row - 1 - i, self.__col - 1 - i])
 
-            #RIGHT DOWN
+            # RIGHT DOWN
             if self.__row < ROWS - 1 - i and self.__col > i:
-                if i == 1:
-                    if board.get_cell(self.__row + i, self.__col - i) == 0 and i == 2:
-                        self.__moves.append([self.__row + 1 + i, self.__col - 1 - i])
-                else:
-                    self.__moves.append([self.__row + 1 + i, self.__col - 1 - i])
+                self.__moves.append([self.__row + 1 + i, self.__col - 1 - i])
 
-            #LEFT UP
+            # LEFT UP
             if self.__row > i and self.__col < COLS - 1 - i:
-                if i == 1:
-                    if board.get_cell(self.__row - i, self.__col + i) == 0:
-                        self.__moves.append([self.__row - 1 - i, self.__col + 1 + i])
-                else:
-                    self.__moves.append([self.__row - 1 - i, self.__col + 1 + i])
+                self.__moves.append([self.__row - 1 - i, self.__col + 1 + i])
 
-            #RIGHT UP
+            # RIGHT UP
             if self.__row < ROWS - 1 - i and self.__col < COLS - 1 - i:
-                if i == 1:
-                    if board.get_cell(self.__row + i, self.__col + i) == 0:
-                        self.__moves.append([self.__row + 1 + i, self.__col + 1 + i])
-                else:
-                    self.__moves.append([self.__row + 1 + i, self.__col + 1 + i])
+                self.__moves.append([self.__row + 1 + i, self.__col + 1 + i])
 
-        aux_moves =  self.__moves.copy() #evita algum valor ser ignorado , quando removemos vários elementos
+        aux_moves = self.__moves.copy()  # evita algum valor ser ignorado , quando removemos vários elementos
         for move in self.__moves:
-            #imp_moves = []
+            # imp_moves = []
             move_row, move_col = move
             cell = board.get_cell(move_row, move_col)
-            if cell != 0:
-                #imp_moves.append(move.copy())
+            if cell != 0 and self.get_color() != cell.get_color():
+                continue
+
+            elif cell != 0 and self.get_color() == cell.get_color():
+
                 aux_moves.remove(move)
-
-
-        #Verificar movimentos impossíveis por terem uma peça antes à frente
         self.__moves = aux_moves
+        # Verificar movimentos impossíveis por terem uma peça antes à frente
+        return self.__moves
+
+    def calc_moves(self, board, piece):
+        self.__moves = []
+        i_list = [-1, 0, 1]
+        j_list = [-1, 0, 1]
+        self.__row = piece.get_row()
+        self.__col = piece.get_col()
+
+        if piece != 0 and piece.get_color() == self.get_color():
+            for i2 in i_list:
+                for j2 in j_list:
+                    if 0 <= self.__row + i2 < ROWS and 0 <= self.__col + j2 < COLS and board.get_cell(self.__row + i2, self.__col + j2) == 0:
+                        self.__moves.append([self.__row + i2, self.__col + j2])
+
+            for i2 in i_list:
+                for j2 in j_list:
+                    if 0 <= self.__row + i2*2 < ROWS and 0 <= self.__col + j2*2 < COLS and board.get_cell(self.__row + i2*2, self.__col + j2*2) == 0 and board.get_cell(self.__row + i2, self.__col + j2) == 0:
+                        self.__moves.append([self.__row + i2*2, self.__col + j2*2])
+
+        return self.__moves
+
+
 
     def set_selected_piece_pos(self, piece):
         self.__row = piece.get_row()
         self.__col = piece.get_col()
 
-    def calc_aggressive_moves(self, board):  # incomplete
+    def agr_move_cal(self, board_to_play, vector_move, piece_to_move):
+        # gets all possible aggressive moves (includes only moves to empty cells and opponent stones)
+        moves = self.calc_moves2(board_to_play, piece_to_move)
 
-        self.__aggressive_moves = []
+        result_moves = []
 
-        # copy from calc_moves
+        for move in moves:
+            if (piece_to_move.get_row() + vector_move[0]) == move[0] and (piece_to_move.get_col() + vector_move[1]) == \
+                    move[1]:
+                result_moves.append(move)
 
-        for i in range(2):
-            if self.__row > i:
-                self.__aggressive_moves.append([self.__row - 1 - i, self.__col])
-            if self.__row < ROWS - 1 - i:
-                self.__aggressive_moves.append([self.__row + 1 + i, self.__col])
-            if self.__col > i:
-                self.__aggressive_moves.append([self.__row, self.__col - 1 - i])
-            if self.__col < COLS - 1 - i:
-                self.__aggressive_moves.append([self.__row, self.__col + 1 + i])
-            if self.__row > i and self.__col > i:
-                self.__aggressive_moves.append([self.__row - 1 - i, self.__col - 1 - i])
-            if self.__row < ROWS - 1 - i and self.__col > i:
-                self.__aggressive_moves.append([self.__row + 1 + i, self.__col - 1 - i])
-            if self.__row > i and self.__col < COLS - 1 - i:
-                self.__aggressive_moves.append([self.__row - 1 - i, self.__col + 1 + i])
-            if self.__row < ROWS - 1 - i and self.__col < COLS - 1 - i:
-                self.__aggressive_moves.append([self.__row + 1 + i, self.__col + 1 + i])
 
-        # end of copy (maybe we should create a function, only for this)
 
-        for move in list(self.__moves):
-            move_row, move_col = move
-            cell = board.get_cell(move_row, move_col)
-            if cell == 0:
-                # removes the moves that end on a 'space' (staying only with moves that remove a stone)
-                self.__aggressive_moves.remove(move)
+        self.__aggressive_moves = result_moves
 
     def get_color(self):
         return self.__color
 
     def get_moves(self):
         return self.__moves
+
+    def get_agressive_moves(self):
+        return self.__aggressive_moves

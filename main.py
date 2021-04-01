@@ -1,3 +1,5 @@
+import math
+
 import pygame
 import sys
 import shobu
@@ -6,8 +8,7 @@ from shobu.Model.Board import Board
 from shobu.Model.Game import Game
 from shobu.Model.Player import Player
 from shobu.Model.constants import SQUARE_SIZE, BOARD_OUTLINE, WIDTH, GREEN, BLUE, \
-    LIGHT_BROWN, DARK_BROWN, BOARD_PADDING, BLACK, DISPLAY_SIZE, WHITE, MoveDirect, \
-        ROWS, COLS
+    LIGHT_BROWN, DARK_BROWN, BOARD_PADDING, BLACK, DISPLAY_SIZE, WHITE, MoveDirect, ROWS, COLS
 from shobu.View.BoardView import BoardView
 
 from shobu.View.GameView import GameView
@@ -16,7 +17,7 @@ FPS = 60
 
 WIN = pygame.display.set_mode((DISPLAY_SIZE, DISPLAY_SIZE))  # Display game
 
-# pygame.display.set_caption('Shobu')
+pygame.display.set_caption('Shobu')
 
 
 def get_board_hover_mouse(boards, pos):
@@ -42,61 +43,48 @@ def get_cell_hover_mouse(board, pos):
 def passive_mode1(player, color_playing, radius, run, boards, game_view):
     while run:
 
-        for event in pygame.event.get():
+        result = selected_board_piece(boards)  # obter informações sobre board e peça selecionada
 
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()  # se clicamos para sair do jogo
+        if result is not None:
+            selected_board = result[0]
+            selected_x = result[1]
+            selected_y = result[2]
+            board_x = result[3]
+            board_y = result[4]
+            row = result[5]
+            col = result[6]
 
+            if selected_board is not None:  # Obter peça
+                piece = selected_board.get_cell(row, col)  # Obter possível peça ou quadrado vazio
 
-            elif event.type == pygame.MOUSEBUTTONDOWN:  # Se clicarmos em algo
+                if piece != 0 and color_playing == piece.get_color():
 
-                pos = pygame.mouse.get_pos()  # obter posição do mouse
-                selected_board = get_board_hover_mouse(boards, pos)  # Gives the board selected
+                    pygame.draw.circle(WIN, BLUE, (selected_x, selected_y), radius)
 
-                cell = get_cell_hover_mouse(selected_board, pos)  # gives the cell we are selecting with the mouse
-                row, col = cell
-                row = int(row)
-                col = int(col)
-                last_pos = row, col
+                    player.calc_moves(selected_board, piece)  # calcular movimentos de peça escolhida
+                    moves = player.get_moves()
 
-                ''' estas 3 linhas são necessárias? '''
-                board_x, board_y = selected_board.get_pos()  # gives the position of the board we are selecting with the mouse
-                selected_x = board_x + (SQUARE_SIZE + BOARD_OUTLINE) * col + SQUARE_SIZE // 2
-                selected_y = board_y + (SQUARE_SIZE + BOARD_OUTLINE) * row + SQUARE_SIZE // 2
+                    pygame.display.update()
+                    aux_row, aux_col = piece.get_cell()
 
-                if selected_board is not None:  # Obter peça (se tiver sido selecionada alguma)
-                    piece = selected_board.get_cell(row, col)  # Obter possível peça ou quadrado vazio
+                    # draws the possible moves (w/ green colour) for the selected piece
+                    draw_possible_pos(board_x, board_y, moves, radius)
 
-                    if piece != 0 and color_playing == piece.get_color():
+                    vector = None
+                    run2 = False
+                    while not run2:
+                        aux_result = passive_mode2(moves, selected_board, boards, piece, game_view)
+                        run2 = aux_result[0]
+                        vector = aux_result[1]
+                        print("SDadas")
 
-                        pygame.draw.circle(WIN, BLUE, (selected_x, selected_y), radius)
+                    game_view.draw_game()
+                    pygame.display.update()
 
-                        player.calc_moves(selected_board, piece)  # calcular movimentos de peça escolhida
-                        moves = player.get_moves()
-                        previous_cell = piece.get_cell()  # guarda posição de pedra antes de a mover
-                        pygame.display.update()
-                        # draws the possible moves (w/ green colour) for the selected piece
-                        for move in moves:
-                            row, col = move
-                            # Transformações dos valores para desenhar tendo em conta tada a janela do jogo
-                            move_x = board_x + (SQUARE_SIZE + BOARD_OUTLINE) * col + SQUARE_SIZE // 2
-                            move_y = board_y + (SQUARE_SIZE + BOARD_OUTLINE) * row + SQUARE_SIZE // 2
-                            pygame.draw.circle(WIN, GREEN, (move_x, move_y), radius)
-                            # refresh display
-
-                            pygame.display.update()
-
-                        run2 = False
-                        while not run2:
-                            run2 = passive_mode2(moves, selected_board, boards, piece, game_view)
-                            print("SDadas")
-
-                        game_view.draw_game()
-                        pygame.display.update()
-                        return
-            else:
-                continue
+                    vector = vector[0] - aux_row, vector[1] - aux_col  # vector do movimento
+                    return selected_board.get_color(), vector  # return vector movimento, cor do board onde foi o mov passivo
+        else:
+            continue
 
 
 def passive_mode2(moves, board_selected, boards, piece, game_view):
@@ -108,7 +96,7 @@ def passive_mode2(moves, board_selected, boards, piece, game_view):
             sys.exit()  # se clicamos para sair do jogo
 
         elif event2.type == pygame.K_SPACE:
-            return False
+            return False, move_done_pos
 
         if event2.type == pygame.MOUSEBUTTONDOWN:
 
@@ -127,18 +115,198 @@ def passive_mode2(moves, board_selected, boards, piece, game_view):
                         selected_board2.change_piece_cell(piece, passive_move)
                         move_done_pos = row, col
                         game_view.draw_game()
-                        return True
+                        return True, move_done_pos
 
             else:
                 continue
 
-    return False
+    return False, move_done_pos
 
 
-def evaluate_move(last_pos, new_pos):           # heurística?
-    info_move = []
-    if new_pos[0] == last_pos[0] and new_pos[1] > last_pos:
-        info_move.append(MoveDirect.right)
+def selected_board_piece(boards):
+    for event in pygame.event.get():
+
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()  # se clicamos para sair do jogo
+
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:  # Se clicarmos em algo
+
+            pos = pygame.mouse.get_pos()  # obter posição do mouse
+            selected_board = get_board_hover_mouse(boards, pos)  # Gives the board selected
+
+            cell = get_cell_hover_mouse(selected_board, pos)  # gives the cell we are selecting with the mouse
+            row, col = cell
+            row = int(row)
+            col = int(col)
+
+            board_x, board_y = selected_board.get_pos()  # gives the position of the board we are selecting with the mouse
+            selected_x = board_x + (SQUARE_SIZE + BOARD_OUTLINE) * col + SQUARE_SIZE // 2
+            selected_y = board_y + (SQUARE_SIZE + BOARD_OUTLINE) * row + SQUARE_SIZE // 2
+
+            return selected_board, selected_x, selected_y, board_x, board_y, row, col
+
+        else:
+            continue
+
+
+def active_mode2(moves, board_select, boards, piece, game_view, vector_move):
+    move_done_pos = []
+
+    for event2 in pygame.event.get():
+        if event2.type == pygame.QUIT:  # se clicamos para sair do jogo
+            pygame.quit()
+            sys.exit()  # se clicamos para sair do jogo
+
+        elif event2.type == pygame.K_SPACE:
+            return False, move_done_pos
+
+        if event2.type == pygame.MOUSEBUTTONDOWN:
+
+            pos = pygame.mouse.get_pos()  # obter posição do mouse
+            selected_board2 = get_board_hover_mouse(boards, pos)  # Gives the board selected
+            if selected_board2 == board_select:
+                cell = get_cell_hover_mouse(selected_board2, pos)  # gives the cell we are selecting with the mouse
+                row, col = cell
+                row = int(row)
+                col = int(col)
+
+                active_move = row, col
+                for move in moves:
+
+                    if row == move[0] and col == move[1]:
+                        previous_cell = piece.get_row(), piece.get_col()
+                        if selected_board2.get_board_info()[row][col] != 0:
+                            # verificar se tem peça que pode ser empurrada
+                            aux_piece = selected_board2.get_board_info()[row][col]
+                            aux_cell_dest = aux_piece.get_row() + vector_move[0] // 2, aux_piece.get_col() + \
+                                            vector_move[1] // 2
+
+                            result = selected_board2.change_piece_cell(aux_piece,
+                                                                       aux_cell_dest)  # empurramos peça, mudando de célula
+
+                            if result is not True:  # se peça a ser empurrada, não alocada no tabuleiro, é porque foi empurrada para fora
+
+                                selected_board2.change_piece_cell(piece, active_move)  # movemos a peça que empurrou
+                            else:
+                                selected_board2.change_piece_cell(piece,
+                                                                  active_move)  # mover peça para o espaço vazio de onde estava peça que foi empurrada mas não eliminada
+                        else:
+                            selected_board2.change_piece_cell(piece, active_move)
+
+                            # caso em que se avança duas casas e temos uma peça adversária no caminho e tem de ser
+                            # empurrada
+
+                        if abs(vector_move[0]) > 1 or abs(
+                                vector_move[1]) > 1:  # evitar empurrar peças que estão uma
+                            # seguir À outra
+                            aux_move = previous_cell[0] + vector_move[0] // 2, previous_cell[1] + vector_move[
+                                1] // 2  # obter possível peça uma casa antes do mov de duas casas
+                            poss_piece = selected_board2.get_board_info()[aux_move[0]][aux_move[1]]
+
+                            if selected_board2.get_board_info()[aux_move[0]][
+                                aux_move[1]] != 0 and piece.get_color() != poss_piece.get_color() and \
+                                    selected_board2.get_board_info()[previous_cell[0]][previous_cell[1]] == 0:
+                                cell_dest = poss_piece.get_row() + vector_move[0], poss_piece.get_col() + vector_move[1]
+
+                                selected_board2.change_piece_cell(poss_piece, cell_dest)
+
+                        move_done_pos = row, col
+                        game_view.draw_game()
+                        return True, move_done_pos
+
+            else:
+                continue
+
+    return False, move_done_pos
+
+
+def active_mode1(run, color_board_played, color_playing, player, radius, boards, game_view, vector_move):
+    while run:
+
+        result = selected_board_piece(boards)  # obter informações sobre board e peça selecionada
+
+        if result is not None:
+            selected_board = result[0]
+            selected_x = result[1]
+            selected_y = result[2]
+            board_x = result[3]
+            board_y = result[4]
+            row = result[5]
+            col = result[6]
+
+            if selected_board is not None:  # Obter peça
+                piece = selected_board.get_cell(row, col)  # Obter possível peça ou quadrado vazio
+
+                if piece != 0 and color_playing == piece.get_color() and color_board_played != selected_board.get_color():
+
+                    pygame.draw.circle(WIN, BLUE, (selected_x, selected_y), radius)
+
+                    player.agr_move_cal(selected_board, vector_move, piece)  # calcular movimentos de peça escolhida
+                    moves = player.get_agressive_moves()
+
+                    pygame.display.update()
+                    aux_row, aux_col = piece.get_cell()
+
+                    # verificar moves
+                    if abs(vector_move[0]) > 1 or abs(vector_move[1]) > 1:  # evitar empurrar peças que estão uma
+                        # seguir À outra
+                        aux_move = aux_row + vector_move[0] // 2, aux_col + vector_move[1] // 2
+
+                        if selected_board.get_board_info()[aux_move[0]][aux_move[1]] != 0 and piece.get_color() == \
+                                selected_board.get_board_info()[aux_move[0]][aux_move[1]].get_color():
+                            moves = []
+
+                        elif selected_board.get_board_info()[aux_move[0]][aux_move[1]] != 0 and \
+                                selected_board.get_board_info()[moves[0][0]][moves[0][1]] != 0:
+                            moves = []
+
+
+
+
+                    else:  # caso de empurrar uma casa mas está uma peça a seguir a impedor  (xoo)
+                        aux_move = aux_row + vector_move[0] * 2, aux_col + vector_move[1] * 2
+                        aux_move2 = aux_row + vector_move[0], aux_row + vector_move[1]
+
+                        if aux_move[0] <= ROWS - 1 and aux_move[0] >= 0 and aux_move[1] <= COLS - 1 and aux_move[
+                            1] >= 0:
+
+                            if selected_board.get_board_info()[aux_move[0]][aux_move[1]] != 0 and \
+                                    selected_board.get_board_info()[aux_move2[0]][
+                                        aux_move2[1]] != 0 and piece.get_color() != \
+                                    selected_board.get_board_info()[aux_move[0]][aux_move[1]].get_color():
+                                moves = []
+
+                    draw_possible_pos(board_x, board_y, moves, radius - 10)
+
+                    vector = None
+                    run2 = False
+                    while not run2:
+                        aux_result = active_mode2(moves, selected_board, boards, piece, game_view, vector_move)
+                        run2 = aux_result[0]
+                        vector = aux_result[1]
+                        print("active mode")
+
+                    game_view.draw_game()
+                    pygame.display.update()
+
+                    vector = vector[0] - aux_row, vector[1] - aux_col  # vector do movimento
+                    return vector, selected_board.get_color()  # return vector movimento, cor do board onde foi o mov passivo
+            else:
+                continue
+
+
+def draw_possible_pos(board_x, board_y, moves, radius):
+    for move in moves:
+        row, col = move
+        # Transformações dos valores para desenhar tendo em conta tada a janela do jogo
+        move_x = board_x + (SQUARE_SIZE + BOARD_OUTLINE) * col + SQUARE_SIZE // 2
+        move_y = board_y + (SQUARE_SIZE + BOARD_OUTLINE) * row + SQUARE_SIZE // 2
+        pygame.draw.circle(WIN, GREEN, (move_x, move_y), radius)
+        # refresh display
+
+    pygame.display.update()
 
 # def objective_test(State B|Pla|Yl|Xl)
 def objective_test(boards, player):
@@ -187,6 +355,7 @@ def objective_test(boards, player):
         return -1
 
 
+
 def main():
     FPS = 60
 
@@ -218,19 +387,47 @@ def main():
         # pygame.draw.circle(WIN, GREEN, (383.0, 435.0), radius)
         pygame.display.update()
         aux_boards = game.get_boards()
-        passive_mode1(player1, player1.get_color(), radius, run, aux_boards, game_view)
+        result = passive_mode1(player1, player1.get_color(), radius, run, aux_boards, game_view)
         print("out")
-        res = objective_test(boards,player1)
-        if res != 0:
-            print("game isn't over!")
 
         game_view = GameView(game, WIN)
         game_view.draw_game()
         pygame.display.update()
-        passive_mode1(player2, player2.get_color(), radius, run, game.get_boards(), game_view)
+
+        """piece = aux_boards[2].get_board_info()[3][2]
+        player1.agr_move_cal(aux_boards[2], result[0], piece)
+        aux_list = player1.get_agressive_moves()
+        """
+        # aggressive mode
+        active_mode1(run, result[0], player1.get_color(), player1, radius, aux_boards, game_view, result[1])
+
+        res = objective_test(boards,player1)
+        if res != 0:
+            print("game isn't over!")
+
+        print("hey")
+
+        """for move in aux_list:
+            row, col = move
+            board_x, board_y = aux_boards[2].get_pos()
+            # Transformações dos valores para desenhar tendo em conta tada a janela do jogo
+            move_x = board_x + (SQUARE_SIZE + BOARD_OUTLINE) * col + SQUARE_SIZE // 2
+            move_y = board_y + (SQUARE_SIZE + BOARD_OUTLINE) * row + SQUARE_SIZE // 2
+            pygame.draw.circle(WIN, GREEN, (move_x, move_y), radius)
+            # refresh display"""
+
+        pygame.display.update()
+        result = passive_mode1(player2, player2.get_color(), radius, run, aux_boards, game_view)
+
+        # aggressive mode
+        active_mode1(run, result[0], player2.get_color(), player2, radius, aux_boards, game_view, result[1])
+
         res = objective_test(boards,player2)
         if res != 0:
             print("game isn't over!")
+
+        print(run)
+    # passive_mode1(player2, player2.get_color(), radius, run, game.get_boards(), game_view)
 
 
 """
@@ -240,5 +437,3 @@ def main():
         game_view.drawGame(WIN, board_view, game)
 
         pygame.display.update()"""
-
-main()
