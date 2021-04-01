@@ -354,7 +354,7 @@ def main():
         # aggressive mode
         active_mode1(run, result[0], player1.get_color(), player1, radius, aux_boards, game_view, result[1])
 
-        res = game_controller.objective_test(boards, player1)
+        res = game_controller.objective_test(aux_boards, player1)
         if res != 0:
             print("game isn't over!")
 
@@ -375,13 +375,14 @@ def main():
 
         # aggressive mode
         active_mode1(run, result[0], player2.get_color(), player2, radius, aux_boards, game_view, result[1])
-        heuristics.calc(aux_boards, player2)
-        heuristics.print_value()
 
-        res = game_controller.objective_test(boards, player2)
+        res = game_controller.objective_test(aux_boards, player2)
         if res != 0:
             print("game isn't over!")
         # terminar quando for "gameover"    (testar)
+
+        heuristics.calc(aux_boards, player2)
+        heuristics.print_value()
 
     # passive_mode1(player2, player2.get_color(), radius, run, game.get_boards(), game_view)
 
