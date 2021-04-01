@@ -180,7 +180,8 @@ def active_mode2(moves, board_select, boards, piece, game_view, vector_move):
                         if selected_board2.get_board_info()[row][col] != 0:
                             # verificar se tem peça que pode ser empurrada
                             aux_piece = selected_board2.get_board_info()[row][col]
-                            aux_cell_dest = aux_piece.get_row() + vector_move[0] // 2, aux_piece.get_col() + vector_move[1] //2
+                            aux_cell_dest = aux_piece.get_row() + vector_move[0] // 2, aux_piece.get_col() + \
+                                            vector_move[1] // 2
 
                             result = selected_board2.change_piece_cell(aux_piece,
                                                                        aux_cell_dest)  # empurramos peça, mudando de célula
@@ -253,17 +254,28 @@ def active_mode1(run, color_board_played, color_playing, player, radius, boards,
                         # seguir À outra
                         aux_move = aux_row + vector_move[0] // 2, aux_col + vector_move[1] // 2
 
-                        if selected_board.get_board_info()[aux_move[0]][aux_move[1]] != 0 and \
+                        if selected_board.get_board_info()[aux_move[0]][aux_move[1]] != 0 and piece.get_color() == \
+                                selected_board.get_board_info()[aux_move[0]][aux_move[1]].get_color():
+                            moves = []
+
+                        elif selected_board.get_board_info()[aux_move[0]][aux_move[1]] != 0 and \
                                 selected_board.get_board_info()[moves[0][0]][moves[0][1]] != 0:
                             moves = []
+
+
+
+
                     else:  # caso de empurrar uma casa mas está uma peça a seguir a impedor  (xoo)
                         aux_move = aux_row + vector_move[0] * 2, aux_col + vector_move[1] * 2
                         aux_move2 = aux_row + vector_move[0], aux_row + vector_move[1]
 
-                        if aux_move[0] <= ROWS - 1 and  aux_move[0] >= 0 and aux_move[1] <= COLS - 1 and aux_move[1] >= 0:
+                        if aux_move[0] <= ROWS - 1 and aux_move[0] >= 0 and aux_move[1] <= COLS - 1 and aux_move[
+                            1] >= 0:
 
                             if selected_board.get_board_info()[aux_move[0]][aux_move[1]] != 0 and \
-                                    selected_board.get_board_info()[aux_move2[0]][aux_move2[1]] != 0:
+                                    selected_board.get_board_info()[aux_move2[0]][
+                                        aux_move2[1]] != 0 and piece.get_color() != \
+                                    selected_board.get_board_info()[aux_move[0]][aux_move[1]].get_color():
                                 moves = []
 
                     draw_possible_pos(board_x, board_y, moves, radius - 10)
