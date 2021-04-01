@@ -308,54 +308,6 @@ def draw_possible_pos(board_x, board_y, moves, radius):
 
     pygame.display.update()
 
-# def objective_test(State B|Pla|Yl|Xl)
-def objective_test(boards, player):
-
-    if player.get_color() == BLACK:
-        player_to_beat_color = WHITE
-    elif player.get_color() == WHITE:
-        player_to_beat_color = BLACK
-    else:
-        # checks if a invalid player was created
-        print("invalid player")
-        return
-
-    # checks if there is a board in which a player has removed all the opponent's pieces
-    opponent_beaten = False
-    opponent_present = False
-    for board in boards:
-        for row in range(ROWS):
-            for col in range(COLS):
-
-                cell_content = board.get_cell(row, col) # 0 if empty, rgb color tuple if piece is present
-                if cell_content != 0:
-                    if cell_content.get_color() == player_to_beat_color:
-                        opponent_present = True
-                        print("you haven't won to " + str(player_to_beat_color) + " in board #" + str(board.get_index()) )
-                        break
-
-            if opponent_present:
-                # stops searching in this board as there is at least one opponent piece
-                break
-
-        if opponent_present == False:
-            # checks if a opponent's piece WASN'T found, in the current board
-            # if yes, opponent is beaten!
-            opponent_beaten = True
-            break
-        else:
-            opponent_present = False
-
-    if opponent_beaten == True and player_to_beat_color == WHITE :
-        return 1    # Player 1 wins
-    elif opponent_beaten == True and player_to_beat_color == BLACK :
-        return 2    # Player 2 wins
-    else:
-        # game not finished (should also return a 0 when it's a draw... should depend on the State?)
-        return -1
-
-
-
 def main():
     FPS = 60
 
@@ -374,6 +326,7 @@ def main():
 
     player1 = Player(BLACK)
     player2 = Player(WHITE)
+    player3 = Player(DARK_BROWN)
 
     game = Game(boards, player1, player2)
 
@@ -401,7 +354,7 @@ def main():
         # aggressive mode
         active_mode1(run, result[0], player1.get_color(), player1, radius, aux_boards, game_view, result[1])
 
-        res = objective_test(boards,player1)
+        res = game_controller.objective_test(boards, player1)
         if res != 0:
             print("game isn't over!")
 
@@ -422,7 +375,7 @@ def main():
         # aggressive mode
         active_mode1(run, result[0], player2.get_color(), player2, radius, aux_boards, game_view, result[1])
 
-        res = objective_test(boards,player2)
+        res = game_controller.objective_test(boards, player3)
         if res != 0:
             print("game isn't over!")
         # terminar quando for "gameover"    (testar)
