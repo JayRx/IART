@@ -94,3 +94,22 @@ class Board:
             piece.set_cell(cell)
             self.calc_pos_piece_in_board(piece)
             return True
+
+    def change_piece_cell2(self, piece, cell, vector_move):
+        print('From Board.py, Board w/ index: ' + str(self.__index))
+        row, col = piece.get_cell()
+        new_row, new_col = cell
+
+        print('From Board.py, colour of chosen Piece ' + str(piece))
+        # updates board w/ new piece position
+
+        if new_row > ROWS - 1 or new_row < 0 or  new_col > COLS - 1 or new_col < 0:
+            self.__board_info[row][col] = 0
+            return False
+        else:
+            self.__board_info[row][col] = 0
+            self.__board_info[new_row][new_col] = piece
+            # Actualizar posicionamento da peça na matriz do board e no ecrã
+            piece.set_cell(cell)
+            self.calc_pos_piece_in_board(piece)
+            return True

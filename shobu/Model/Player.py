@@ -2,6 +2,7 @@ from shobu.Model.constants import ROWS, COLS
 from shobu.Model.Board import Board
 
 
+
 class Player:
 
     def __init__(self, color):
@@ -161,6 +162,8 @@ class Player:
             if (piece_to_move.get_row() + vector_move[0]) == move[0] and (piece_to_move.get_col() + vector_move[1]) == \
                     move[1]:
                 result_moves.append(move)
+
+
 
         self.__aggressive_moves = result_moves
 

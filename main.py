@@ -1,3 +1,5 @@
+import math
+
 import pygame
 import sys
 import shobu
@@ -6,7 +8,7 @@ from shobu.Model.Board import Board
 from shobu.Model.Game import Game
 from shobu.Model.Player import Player
 from shobu.Model.constants import SQUARE_SIZE, BOARD_OUTLINE, WIDTH, GREEN, BLUE, \
-    LIGHT_BROWN, DARK_BROWN, BOARD_PADDING, BLACK, DISPLAY_SIZE, WHITE, MoveDirect
+    LIGHT_BROWN, DARK_BROWN, BOARD_PADDING, BLACK, DISPLAY_SIZE, WHITE, MoveDirect, ROWS, COLS
 from shobu.View.BoardView import BoardView
 
 from shobu.View.GameView import GameView
@@ -149,7 +151,7 @@ def selected_board_piece(boards):
             continue
 
 
-def active_mode2(moves, board_select, boards, piece, game_view,vector_move):
+def active_mode2(moves, board_select, boards, piece, game_view, vector_move):
     move_done_pos = []
 
     for event2 in pygame.event.get():
@@ -174,29 +176,40 @@ def active_mode2(moves, board_select, boards, piece, game_view,vector_move):
                 for move in moves:
 
                     if row == move[0] and col == move[1]:
-
-                        #faltam apenas os casos de empurrar duas casas quando peça exatamente à frente da que ataca
-                        # deixar de selecionar peças à vontade
-                        #vector_move2 = (row - vector_move[0] )//2 ,(col - vector_move[1] )//2
-
-                       #aux_piece2 = piece.get_cell()[0] + vector_move2[0], piece.get_cell()[1] + vector_move2[1]
-
-
+                        previous_cell = piece.get_row(), piece.get_col()
                         if selected_board2.get_board_info()[row][col] != 0:
                             # verificar se tem peça que pode ser empurrada
                             aux_piece = selected_board2.get_board_info()[row][col]
-                            aux_piece2 = aux_piece.get_row() + vector_move[0], aux_piece.get_col() + vector_move[1]
-                            result = selected_board2.change_piece_cell(aux_piece, aux_piece2)#empurramos peça, mudando de célula
+                            aux_cell_dest = aux_piece.get_row() + vector_move[0], aux_piece.get_col() + vector_move[1]
+
+                            result = selected_board2.change_piece_cell(aux_piece,
+                                                                       aux_cell_dest)  # empurramos peça, mudando de célula
 
                             if result is not True:  # se peça a ser empurrada, não alocada no tabuleiro, é porque foi empurrada para fora
 
-                                #selected_board2.get_board_info()[row][col] = 0  # eliminiamos peça
                                 selected_board2.change_piece_cell(piece, active_move)  # movemos a peça que empurrou
                             else:
-                                selected_board2.change_piece_cell(piece, active_move) #mover peça para o espaço vazio de onde estava peça que foi empurrada mas não eliminada
+                                selected_board2.change_piece_cell(piece,
+                                                                  active_move)  # mover peça para o espaço vazio de onde estava peça que foi empurrada mas não eliminada
                         else:
                             selected_board2.change_piece_cell(piece, active_move)
 
+                            # caso em que se avança duas casas e temos uma peça adversária no caminho e tem de ser
+                            # empurrada
+
+                        if abs(vector_move[0]) > 1 or abs(
+                                vector_move[1]) > 1:  # evitar empurrar peças que estão uma
+                            # seguir À outra
+                            aux_move = previous_cell[0] + vector_move[0] // 2, previous_cell[1] + vector_move[
+                                1] // 2  # obter possível peça uma casa antes do mov de duas casas
+                            poss_piece = selected_board2.get_board_info()[aux_move[0]][aux_move[1]]
+
+                            if selected_board2.get_board_info()[aux_move[0]][
+                                aux_move[1]] != 0 and piece.get_color() != poss_piece.get_color() and \
+                                    selected_board2.get_board_info()[previous_cell[0]][previous_cell[1]] == 0:
+                                cell_dest = poss_piece.get_row() + vector_move[0], poss_piece.get_col() + vector_move[1]
+
+                                selected_board2.change_piece_cell(poss_piece, cell_dest)
 
                         move_done_pos = row, col
                         game_view.draw_game()
@@ -235,12 +248,30 @@ def active_mode1(run, color_board_played, color_playing, player, radius, boards,
                     pygame.display.update()
                     aux_row, aux_col = piece.get_cell()
 
+                    # verificar moves
+                    if abs(vector_move[0]) > 1 or abs(vector_move[1]) > 1:  # evitar empurrar peças que estão uma
+                        # seguir À outra
+                        aux_move = aux_row + vector_move[0] // 2, aux_col + vector_move[1] // 2
+
+                        if selected_board.get_board_info()[aux_move[0]][aux_move[1]] != 0 and \
+                                selected_board.get_board_info()[moves[0][0]][moves[0][1]] != 0:
+                            moves = []
+                    else:  # caso de empurrar uma casa mas está uma peça a seguir a impedor  (xoo)
+                        aux_move = aux_row + vector_move[0] * 2, aux_col + vector_move[1] * 2
+                        aux_move2 = aux_row + vector_move[0], aux_row + vector_move[1]
+
+                        if aux_move[0] <= ROWS - 1 and  aux_move[0] >= 0 and aux_move[1] <= COLS - 1 and aux_move[1] >= 0:
+
+                            if selected_board.get_board_info()[aux_move[0]][aux_move[1]] != 0 and \
+                                    selected_board.get_board_info()[aux_move2[0]][aux_move2[1]] != 0:
+                                moves = []
+
                     draw_possible_pos(board_x, board_y, moves, radius - 10)
 
                     vector = None
                     run2 = False
                     while not run2:
-                        aux_result = active_mode2(moves, selected_board, boards, piece, game_view,vector_move)
+                        aux_result = active_mode2(moves, selected_board, boards, piece, game_view, vector_move)
                         run2 = aux_result[0]
                         vector = aux_result[1]
                         print("active mode")
@@ -264,12 +295,6 @@ def draw_possible_pos(board_x, board_y, moves, radius):
         # refresh display
 
     pygame.display.update()
-
-
-def evaluate_move(last_pos, new_pos):
-    info_move = []
-    if new_pos[0] == last_pos[0] and new_pos[1] > last_pos:
-        info_move.append(MoveDirect.right)
 
 
 def main():
