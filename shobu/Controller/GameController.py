@@ -40,7 +40,7 @@ class GameController:
                             break
 
                 if opponent_present:
-                    # stops searching in this board as there is at least one opponent piece
+                    # stops searching in this board as there is, at least, one opponent piece
                     break
 
             if opponent_present == False:
@@ -56,6 +56,6 @@ class GameController:
         elif opponent_beaten == True and player_to_beat_color == BLACK :
             return 2    # Player 2 wins
         else:
-            # game not finished (should also return a 0 when it's a draw... should depend on the State?)
+            # game not finished
             return -1
 
