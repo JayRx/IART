@@ -35,6 +35,8 @@ def get_board_hover_mouse(boards, pos):
 
 
 def get_cell_hover_mouse(board, pos):
+    if board == None:
+        return None, None
     x, y = pos
     board_x, board_y = board.get_pos()
     row = (y - board_y) // (SQUARE_SIZE + BOARD_OUTLINE)
@@ -122,6 +124,8 @@ def selected_board_piece(boards):
 
             cell = get_cell_hover_mouse(selected_board, pos)  # gives the cell we are selecting with the mouse
             row, col = cell
+            if row == None or col == None:
+                return None
             row = int(row)
             col = int(col)
 
