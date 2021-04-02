@@ -2,22 +2,23 @@ from shobu.Model.constants import ROWS, COLS
 from shobu.Model.Board import Board
 
 
-
 class Player:
 
-    def __init__(self, color):
+    def __init__(self, color, boards):
         self.__win_state = False
         self.__color = color
         self.__moves = []
         self.__aggressive_moves = []
         self.__row = 0
         self.__col = 0
+        self.__boards = boards
 
     def get_state(self):
         return self.__win_state
 
     def calc_moves2(self, board, piece):
-        self.__moves = []
+        self.restart_passive_moves()
+
         self.__row = piece.get_row()
         self.__col = piece.get_col()
         for i in range(2):
@@ -69,6 +70,7 @@ class Player:
         return self.__moves
 
     def calc_moves(self, board, piece):
+        self.restart_passive_moves()
         self.__moves = []
         i_list = [-1, 0, 1]
         j_list = [-1, 0, 1]
@@ -78,23 +80,25 @@ class Player:
         if piece != 0 and piece.get_color() == self.get_color():
             for i2 in i_list:
                 for j2 in j_list:
-                    if 0 <= self.__row + i2 < ROWS and 0 <= self.__col + j2 < COLS and board.get_cell(self.__row + i2, self.__col + j2) == 0:
+                    if 0 <= self.__row + i2 < ROWS and 0 <= self.__col + j2 < COLS and board.get_cell(self.__row + i2,
+                                                                                                      self.__col + j2) == 0:
                         self.__moves.append([self.__row + i2, self.__col + j2])
 
             for i2 in i_list:
                 for j2 in j_list:
-                    if 0 <= self.__row + i2*2 < ROWS and 0 <= self.__col + j2*2 < COLS and board.get_cell(self.__row + i2*2, self.__col + j2*2) == 0 and board.get_cell(self.__row + i2, self.__col + j2) == 0:
-                        self.__moves.append([self.__row + i2*2, self.__col + j2*2])
+                    if 0 <= self.__row + i2 * 2 < ROWS and 0 <= self.__col + j2 * 2 < COLS and board.get_cell(
+                            self.__row + i2 * 2, self.__col + j2 * 2) == 0 and board.get_cell(self.__row + i2,
+                                                                                              self.__col + j2) == 0:
+                        self.__moves.append([self.__row + i2 * 2, self.__col + j2 * 2])
 
         return self.__moves
-
-
 
     def set_selected_piece_pos(self, piece):
         self.__row = piece.get_row()
         self.__col = piece.get_col()
 
     def agr_move_cal(self, board_to_play, vector_move, piece_to_move):
+        self.restart_active_moves()
         # gets all possible aggressive moves (includes only moves to empty cells and opponent stones)
         moves = self.calc_moves2(board_to_play, piece_to_move)
 
@@ -104,8 +108,6 @@ class Player:
             if (piece_to_move.get_row() + vector_move[0]) == move[0] and (piece_to_move.get_col() + vector_move[1]) == \
                     move[1]:
                 result_moves.append(move)
-
-
 
         self.__aggressive_moves = result_moves
 
@@ -117,3 +119,15 @@ class Player:
 
     def get_agressive_moves(self):
         return self.__aggressive_moves
+
+    def restart_passive_moves(self):
+        self.__moves = []
+
+    def restart_active_moves(self):
+        self.__aggressive_moves = []
+
+    def get_boards(self):
+        return self.__boards
+
+    def set_active_moves(self, active_moves):
+        self.__aggressive_moves = active_moves

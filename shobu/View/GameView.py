@@ -6,20 +6,21 @@ from shobu.Model.constants import BLACK, WHITE, OUTLINE, ROWS, COLS, SQUARE_SIZE
 import pygame
 
 from shobu.View.PieceView import PieceView
-#from shobu.View.PlayerView import PlayerView
+
+
+# from shobu.View.PlayerView import PlayerView
 
 
 class GameView:
 
-    def __init__(self, game, window_game):
-        self.__game = game
+    def __init__(self, window_game):
+
         self.__window_game = window_game
         self.__board_view = BoardView()
-       # self.__player1_view = PlayerView()
-      #  self.__player2_view = PlayerView()
+
         self.__piece_view = PieceView()
 
-    def draw_game(self):
+    def draw_game(self, game):
         # colors the screen with white
         self.__window_game.fill(WHITE)
 
@@ -28,10 +29,11 @@ class GameView:
             BOARD_PADDING, DISPLAY_SIZE // 2 - LINE_HEIGHT // 2, DISPLAY_SIZE - 2 * BOARD_PADDING, LINE_HEIGHT))
 
         # desenhamos todos os tabuleiros e peças atuais
-        for i in range (len(self.__game.get_boards())):
-            aux_board = self.__game.get_boards()[i]
+        for i in range(len(game.get_boards())):
+            aux_board = game.get_boards()[i]
             self.__board_view.draw(self.__window_game, aux_board, self.__piece_view)
 
+        pygame.display.update()
         """self.__player1_view.draw(self.__window_game, self.__game.get_player1())
         self.__player2_view.draw(self.__window_game, self.__game.get_player2())"""
 
@@ -54,3 +56,6 @@ class GameView:
 
     def get_window_game(self):
         return self.__window_game
+
+    def refresh_window(self):
+        pygame.display.update()
