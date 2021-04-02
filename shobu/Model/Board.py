@@ -68,6 +68,18 @@ class Board:
     def get_background_size(self):
         return self.__BACKGROUND_SIZE
 
+    def get_all_pieces(self, player_color):
+        pieces = []
+        
+        for row in range(ROWS):
+            for col in range(COLS):
+                # if cell has a piece
+                if (self.__board_info[row][col] != 0) :
+                    current_piece = self.__board_info[row][col] 
+                    if (current_piece.get_color() == player_color):
+                        pieces.append(current_piece)
+        return pieces
+
     """ Change a piece of a board"""
 
     def calc_pos_piece_in_board(self, piece):

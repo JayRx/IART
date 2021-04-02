@@ -12,6 +12,8 @@ class Player:
         self.__aggressive_moves = []
         self.__row = 0
         self.__col = 0
+        # check if Flávio has created one
+        self.boards = []
 
     def get_state(self):
         return self.__win_state
@@ -117,3 +119,7 @@ class Player:
 
     def get_agressive_moves(self):
         return self.__aggressive_moves
+
+# check if Flávio has created one
+    def get_boards(self):
+        return self.boards

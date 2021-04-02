@@ -18,13 +18,10 @@ class Game:
     def get_is_finish(self):
         return self.__is_finish
 
-    def get_all_pieces(self, player_color):
-        pieces = []
+# check if Flávio has created one
+    def obtain_opposite_color_boards(self, color_board_played):
+        board_diff_color = []
         for board in self.__boards:
-            for row in range(ROWS):
-                for col in range(COLS):
-                    if (board.get_board_info()[row][col] != 0) :
-                        current_piece = board.get_board_info()[row][col] 
-                        if (current_piece.get_color() == player_color):
-                            pieces.append(current_piece)
-        return pieces
+            if board.get_color() != color_board_played:
+                board_diff_color.append(board)
+        return board_diff_color

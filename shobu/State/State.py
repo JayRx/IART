@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from shobu.Model.constants import Action
 
-"""class State(ABC):
+class State(ABC):
 
     def __init__(self,game):
         self.__game = game
@@ -40,4 +40,24 @@ class MenuState:
         self.__game = game
         self.__game_view = game_view
 
-    def execute(self,game, game_view):"""
+    def execute(self,game, game_view):
+
+class MinimaxState:
+    def __init__(self, game, boards, possible_play_boards, pieces):
+        self.__game = game
+        #self.__game_view = game_view
+        self.boards = boards    # all boards (untouched)
+        self.possible_play_boards = possible_play_boards    #maybe need to get board index to replace it in the "real" board
+        self.pieces = pieces
+
+    def get_possible_play_passive_board():
+        board_passive, board_aggressive = self.boards
+        return board_passive
+
+    def get_possible_play_aggressive_board():
+        board_passive, board_aggressive = self.boards
+        return board_aggressive
+
+
+    #def execute(self,game, game_view):
+    def execute(self):
