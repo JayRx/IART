@@ -254,7 +254,7 @@ def active_mode1(player, color_board_played, vector_move,
                     if ROWS - 1 >= aux_move[0] >= 0 and aux_move[1] <= COLS - 1 and aux_move[
                         1] >= 0:
 
-                        if ROWS - 1 >= moves[0][0] >= 0 and moves[0][1] <= COLS - 1 and moves[0][
+                        if len(moves) > 0 and  ROWS - 1 >= moves[0][0] >= 0 and moves[0][1] <= COLS - 1 and moves[0][
                             1] >= 0:
 
                             if selected_board.get_board_info()[aux_move[0]][aux_move[1]] != 0 and piece.get_color() == \
@@ -264,8 +264,7 @@ def active_mode1(player, color_board_played, vector_move,
 
                             # Casos mov duas casas, onde empurrar uma peça pode não ser possível, por ter peças atrás: Juntas, intervaladas ambas as cores
                             elif selected_board.get_board_info()[aux_move[0]][aux_move[1]] != 0 and \
-                                     selected_board.get_board_info()[moves[0][0]][moves[0][
-                                        1]] != 0:  # and  selected_board.get_board_info()[moves[0][0] + aux_move[0]][moves[0][1] + aux_move[1]] != 0:
+                                     selected_board.get_board_info()[moves[0][0]][moves[0][1]] != 0:  # and  selected_board.get_board_info()[moves[0][0] + aux_move[0]][moves[0][1] + aux_move[1]] != 0:
                                 player.set_active_moves([])
                                 return False
 
@@ -492,7 +491,7 @@ def player_play(game, game_view, player, player_view,
         selected_board = selected_board_info_piece[0]
 
         # phase2
-        
+
         selected_board_info_piece = None
         result = False
         while not result:
