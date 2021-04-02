@@ -8,16 +8,16 @@ class Minimax:
         self.depth = depth
 
     # depth - depth of the search tree
-    def minimax(board, max_player, game_controller)  # maybe boards?
+    def minimax(boards, max_player, game_controller)
         # in depth 0 of the tree
-        if self.depth == 0 or game_controller.objective_test(board, max_player) != -1:
+        if self.depth == 0 or game_controller.objective_test(boards, max_player) != -1:
             # this means that in this board, we have a winner
-            return heuristics.calc(board, max_player).value, board
+            return heuristics.calc(boards, max_player).value, boards
         
         if max_player:
             maxVal = float('-inf')
             best_turn = None
-            # for turn in get_all_turns()
+            #for turn in get_all_turns(): 
             #...
         else: #for min_player
             #...
