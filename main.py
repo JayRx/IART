@@ -15,6 +15,8 @@ from shobu.View.GameView import GameView
 
 from shobu.Heuristics.Heuristics import *
 
+
+
 FPS = 60
 
 WIN = pygame.display.set_mode((DISPLAY_SIZE, DISPLAY_SIZE))  # Display game
@@ -352,6 +354,7 @@ def main():
         aux_list = player1.get_agressive_moves()
         """
         # aggressive mode
+        print(game.get_all_pieces(BLACK))
         active_mode1(run, result[0], player1.get_color(), player1, radius, aux_boards, game_view, result[1])
 
         res = game_controller.objective_test(aux_boards, player1)
