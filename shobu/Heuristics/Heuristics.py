@@ -5,6 +5,7 @@ from shobu.Model.Player import Player
 
 from shobu.Model.constants import *
 
+
 class Heuristics:
     def __init__(self):
         self.value = 0
@@ -27,7 +28,7 @@ class Heuristics:
                     cell = board.get_cell(i, j)
                     if cell != 0 and cell.get_color() == player.get_color():
                         value += 50
-        self.value += math.log(value)*100
+        self.value += math.log(value) * 100
 
     # Add points for every central position
     def calc_position_of_pieces(self, boards, player):

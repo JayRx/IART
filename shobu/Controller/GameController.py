@@ -11,7 +11,7 @@ class GameController:
         self.__player2_controller = PlayerController(game, game_view)
 
     def start(self):
-        self.__game_view.draw_game()
+        self.__game_view.draw_game(self.__game)
 
     # def objective_test(State B|Pla|Yl|Xl)
     def objective_test(self, boards, player):
