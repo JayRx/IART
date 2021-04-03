@@ -53,6 +53,11 @@ class Board:
         else:
             return None
 
+    def get_cell2(self, cell):
+        if 0 <= cell[0] < ROWS and 0 <= cell[1] < COLS:
+            return self.__board_info[cell[0]][cell[1]]
+        else:
+            return None
     def get_color(self):
         return self.__color
 
@@ -84,7 +89,7 @@ class Board:
         print('From Board.py, colour of chosen Piece ' + str(piece))
         # updates board w/ new piece position
 
-        if new_row > ROWS - 1 or new_row < 0 or  new_col > COLS - 1 or new_col < 0:
+        if new_row > ROWS - 1 or new_row < 0 or new_col > COLS - 1 or new_col < 0:
             self.__board_info[row][col] = 0
             return False
         else:
@@ -95,21 +100,20 @@ class Board:
             self.calc_pos_piece_in_board(piece)
             return True
 
-    def change_piece_cell2(self, piece, cell, vector_move):
+    def change_pieces_active(self, piece, adv_pieces, vector_move):
         print('From Board.py, Board w/ index: ' + str(self.__index))
         row, col = piece.get_cell()
-        new_row, new_col = cell
 
         print('From Board.py, colour of chosen Piece ' + str(piece))
         # updates board w/ new piece position
+        for piece_adv in adv_pieces:
+            new_row = piece_adv.get_row() + vector_move[0]
+            new_col = piece_adv.get_col() + vector_move[1]
+            if new_row > ROWS - 1 or new_row < 0 or new_col > COLS - 1 or new_col < 0:
+                self.__board_info[row][col] = 0
+            else:
+                self.change_piece_cell(piece, (new_row, new_col))
 
-        if new_row > ROWS - 1 or new_row < 0 or  new_col > COLS - 1 or new_col < 0:
-            self.__board_info[row][col] = 0
-            return False
-        else:
-            self.__board_info[row][col] = 0
-            self.__board_info[new_row][new_col] = piece
-            # Actualizar posicionamento da peça na matriz do board e no ecrã
-            piece.set_cell(cell)
-            self.calc_pos_piece_in_board(piece)
-            return True
+        row, col = row + vector_move[0], col + vector_move[1]
+        self.change_piece_cell(piece, (row, col))
+        return True

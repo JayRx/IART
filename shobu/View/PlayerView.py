@@ -10,13 +10,12 @@ class PlayerView:
     def __init__(self, window):
         self.__window = window
 
-
-
     # desenhar jogadas possíveis e seleção de peça
-    def draw_view_piece_select(self,selected_x, selected_y, color):
+    def draw_view_piece_select(self, selected_x, selected_y, color):
         pygame.draw.circle(self.__window, color, (selected_x, selected_y), RADIUS - 10)
+        pygame.display.update()
 
-    def draw_passive_moves(self,board_x, board_y,player):
+    def draw_passive_moves(self, board_x, board_y, player):
 
         for move in player.get_moves():
             row, col = move
@@ -29,7 +28,7 @@ class PlayerView:
 
         pygame.display.update()
 
-    def draw_active_moves(self,board_x, board_y,player):
+    def draw_active_moves(self, board_x, board_y, player):
         for move in player.get_agressive_moves():
             row, col = move
             # Transformações dos valores para desenhar tendo em conta tada a janela do jogo
