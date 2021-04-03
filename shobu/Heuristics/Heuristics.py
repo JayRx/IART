@@ -29,7 +29,15 @@ class Heuristics:
                     cell = board.get_cell(i, j)
                     if cell != 0 and cell.get_color() == player.get_color():
                         value += 50
-        self.value += math.log(value) * 100
+
+        for board in boards:
+            for i in range(ROWS):
+                for j in range(COLS):
+                    cell = board.get_cell(i, j)
+                    if cell != 0 and cell.get_color() != player.get_color():
+                        value -= 50
+
+        self.value += value * 10
 
     # Add points for every central position
     def calc_position_of_pieces(self, boards, player):
@@ -41,7 +49,7 @@ class Heuristics:
                     if cell != 0 and cell.get_color() == player.get_color():
                         if 1 <= i <= 2 and 1 <= j <= 2:
                             value += 50
-        self.value += value * math.sqrt(3)
+        self.value += value
 
     # Add points for every piece with an agressive position
     def calc_agressive_position_of_pieces(self, boards, player):
@@ -63,7 +71,7 @@ class Heuristics:
                                 if 0 <= i + i2 * 2 < ROWS and 0 <= j + j2 * 2 < COLS and board.get_cell(i + i2 * 2, j + j2 * 2) != 0 and board.get_cell(i + i2 * 2, j + j2 * 2).get_color() != player.get_color() and board.get_cell(i + i2,j + j2) == 0:
                                     value += 50
 
-        self.value += value * math.sqrt(5)
+        self.value += value
 
     def get_value(self):
         return self.value
