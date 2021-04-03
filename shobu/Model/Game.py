@@ -18,10 +18,5 @@ class Game:
     def get_is_finish(self):
         return self.__is_finish
 
-# check if Flávio has created one
-    def obtain_opposite_color_boards(self, color_board_played):
-        board_diff_color = []
-        for board in self.__boards:
-            if board.get_color() != color_board_played:
-                board_diff_color.append(board)
-        return board_diff_color
+    def ai_movement(self, boards):
+        self.__boards = boards

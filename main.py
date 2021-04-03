@@ -15,6 +15,7 @@ from shobu.View.GameView import GameView
 
 from shobu.Heuristics.Heuristics import *
 from shobu.View.PlayerView import PlayerView
+from minimax_algorithm import Minimax
 
 
 
@@ -330,13 +331,21 @@ def main():
     heuristics = Heuristics()
 
     game_controller.start()
+    ai = True   # change this to play humanvshuman
+
     while run:
 
         game_view = GameView(WIN)
         player_play(game, game_view, player1,
                     player1_view)
 
-        player_play(game, game_view, player2, player2_view)
+        # Player 2 is the white player (is the ai)  (maybe implement a menu + change player?)
+        if (ai == True):
+            minmaxAlgorithm = Minimax(player1, player2)
+            value, new_boards = minmaxAlgorithm.minimax(game.get_boards(), 2, WHITE, game_controller)
+            game.ai_movement(new_boards)
+        else:
+            player_play(game, game_view, player2, player2_view)
 
         """piece = aux_boards[2].get_board_info()[3][2]
         player1.agr_move_cal(aux_boards[2], result[0], piece)

@@ -41,3 +41,6 @@ class Heuristics:
                         if 1 <= i <= 2 and 1 <= j <= 2:
                             value += 50
         self.value += value * math.sqrt(3)
+
+    def get_value(self):
+        return self.value

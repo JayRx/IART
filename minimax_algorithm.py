@@ -1,26 +1,28 @@
 from copy import deepcopy
-from shobu.State.State import State
+from shobu.State.State import State, MinimaxState
 from shobu.Model.constants import BLACK, WHITE
-
-# import rgb colors?
+from shobu.Heuristics.Heuristics import Heuristics
 
 class Minimax:
-    def __init__(self, player):
-        self.player = player
+    def __init__(self, player1, player2):
+        self.player1 = player1
+        self.player2 = player2
 
     # depth - depth of the search tree
-    def minimax(boards, depth, max_player, game_controller)
+    def minimax(self, boards, depth, max_player, game_controller):
         # in depth 0 of the tree
-        if self.depth == 0 or game_controller.objective_test(boards, max_player) != -1:
+        if depth == 0 or game_controller.objective_test(boards, self.player2) != -1:
             # this means that in this board, we have a winner
-            return heuristics.calc(boards, self.player).value, boards    #TODO rever um pouco isto (max player e boards finais(criar uma nova var no State?))
+            heuristics = Heuristics()
+            heuristics.calc(boards, self.player2)
+            return heuristics.get_value(), boards    #TODO rever um pouco isto (max player )
         
         if max_player:
-            maxVal = float('-inf')
+            max_evalue = float('-inf')
             best_turn = None
-            for turn in self.get_all_turns(game_controller, WHITE, self.player, boards):
+            for turn in self.get_all_turns(game_controller, WHITE, self.player2, boards):
                 # gets an evaluation for each of the turns
-                evaluation = minimax(turn, depth-1, False, game_controller)[0]  # here only max_evalue is needed
+                evaluation = self.minimax(turn.get_boards_after_play(), depth-1, False, game_controller)[0]  # here only max_evalue is needed
                 max_evalue = max(max_evalue, evaluation)
 
                 if max_evalue == evaluation:
@@ -31,11 +33,11 @@ class Minimax:
             
         else: #for min_player (max_player == False)
 
-            minVal = float('inf')
+            min_evalue = float('inf')
             best_turn = None
-            for turn in self.get_all_turns(game_controller, BLACK, self.player, boards):
+            for turn in self.get_all_turns(game_controller, BLACK, self.player1, boards):
                 # gets an evaluation for each of the turns
-                evaluation = minimax(turn, depth-1, True, game_controller)[0]  # here only min_evalue is needed
+                evaluation = self.minimax(turn.get_boards_after_play(), depth-1, True, game_controller)[0]  # here only min_evalue is needed
                 min_evalue = min(min_evalue, evaluation)
 
                 if min_evalue == evaluation:
@@ -73,7 +75,7 @@ class Minimax:
                         move_vector = pas_move[0] - piece_passive.get_row(), pas_move[1] - piece_passive.get_col()
 
                         # for each piece of the player playing an aggressive move
-                        for piece_aggressive in board_aggressive.get_all_pieces(color)
+                        for piece_aggressive in board_aggressive.get_all_pieces(color):
                             # compute and gets an aggressive move
                             player.agr_move_cal(board_aggressive, move_vector, piece_aggressive)
                             aggressive_move = player.get_agressive_moves()
@@ -88,8 +90,8 @@ class Minimax:
                             temp_pieces = temp_piece_passive, temp_piece_aggressive
 
                             # generates a new boards (passive+aggressive) for each possible turn, saves it as a MinimaxState
-                            possible_play_boards = generate_turn(temp_boards, temp_pieces, move_vector, game)
-                            turn = MinimaxState(game, boards, possible_play_boards, pieces)    # boards represents what is being displayed now, before the move (board untouched)
+                            possible_play_boards = self.generate_turn(temp_boards, temp_pieces, move_vector, game)
+                            turn = MinimaxState(game, boards, possible_play_boards, temp_pieces)    # boards represents what is being displayed now, before the move (board untouched)
                             
                             # appends the turn that can be done with that pieces, giving as result possible_play_boards
                             turns.append(turn)

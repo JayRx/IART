@@ -59,3 +59,10 @@ class GameController:
             # game not finished
             return -1
 
+    def obtain_opposite_color_boards(self, color_board_played):
+        board_diff_color = []
+        for board in self.__game.get_boards():
+            if board.get_color() != color_board_played:
+                board_diff_color.append(board)
+        return board_diff_color
+
