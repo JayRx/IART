@@ -13,6 +13,10 @@ If you are having problems with this, checkout the Pygame's Getting Started sect
 ## Compilation and Running Instructions
 To run the program you just need to run the `main.py` file.
 
+## Menu Instructions
+- The menu will be represented in the terminal.
+- You just need to choose the option you want and input it in the terminal.
+
 ## Game Instructions
 - To select a piece you just need to `click` on it.
 - Once a piece is selected it will be **highlighted in blue** and all **possible passive moves** will be **highlighted in green**.
