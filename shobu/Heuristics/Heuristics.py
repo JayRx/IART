@@ -65,5 +65,5 @@ class Heuristics:
 
         self.value += value * math.sqrt(5)
 
-def get_value(self):
+    def get_value(self):
         return self.value
