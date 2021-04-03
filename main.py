@@ -261,7 +261,7 @@ def active_mode1(player, color_board_played, vector_move,
                     if ROWS - 1 >= aux_move[0] >= 0 and aux_move[1] <= COLS - 1 and aux_move[
                         1] >= 0:
 
-                        if len(moves) > 0 and  ROWS - 1 >= moves[0][0] >= 0 and moves[0][1] <= COLS - 1 and moves[0][
+                        if len(moves) > 0 and ROWS - 1 >= moves[0][0] >= 0 and moves[0][1] <= COLS - 1 and moves[0][
                             1] >= 0:
 
                             if selected_board.get_board_info()[aux_move[0]][aux_move[1]] != 0 and piece.get_color() == \
@@ -271,7 +271,8 @@ def active_mode1(player, color_board_played, vector_move,
 
                             # Casos mov duas casas, onde empurrar uma peça pode não ser possível, por ter peças atrás: Juntas, intervaladas ambas as cores
                             elif selected_board.get_board_info()[aux_move[0]][aux_move[1]] != 0 and \
-                                     selected_board.get_board_info()[moves[0][0]][moves[0][1]] != 0:  # and  selected_board.get_board_info()[moves[0][0] + aux_move[0]][moves[0][1] + aux_move[1]] != 0:
+                                    selected_board.get_board_info()[moves[0][0]][moves[0][
+                                        1]] != 0:  # and  selected_board.get_board_info()[moves[0][0] + aux_move[0]][moves[0][1] + aux_move[1]] != 0:
                                 player.set_active_moves([])
                                 return False
 
@@ -327,8 +328,6 @@ def main():
     game_view = GameView(WIN)
 
     game_controller = GameController(game, game_view)
-
-    heuristics = Heuristics()
 
     game_controller.start()
     ai = True   # change this to play humanvshuman
@@ -414,6 +413,11 @@ def player_play(game, game_view, player, player_view,
     color_board_passive_move = None
     phase1_player = False
 
+    heuristics = Heuristics()
+
+    heuristics.calc(boards, player)
+    heuristics.print_value()
+
     while not phase1_player:
         move_done_pos = []
         game_view.draw_game(game)
@@ -470,72 +474,71 @@ def player_play(game, game_view, player, player_view,
         # refresh do ecrã com nova configuração do jogo
 
         game_view.draw_game(game)
-    # active phase
+
+        # active phase
     phase2_player = False
     # Phase2
     while not phase2_player:
         game_view.draw_game(game)
         result = False
-
+        piece = None
+        board = None
+        aux_result = None
         while not result:
 
             selected_board_info_piece = selected_board_piece(boards)
-            if selected_board_info_piece is not None:
-                result = active_mode1(player, color_board_passive_move, vector_for_active,
-                                      selected_board_info_piece)
 
-        # informaações sobre o local, pe
+            if selected_board_info_piece is not None and selected_board_info_piece[
+                0].get_color() != color_board_passive_move:
+                board = selected_board_info_piece[0]
+                row = selected_board_info_piece[5]
+                col = selected_board_info_piece[6]
+
+                if player.verify_limits((row, col)) and player.verify_is_piece_equal_color((row, col), board):
+                    piece = board.get_cell(row, col)
+                    aux_result = player.agr_move_cal2(board, vector_for_active, piece, color_board_passive_move)
+                    if aux_result[0] is True:
+                        result = True
+
+        # Sinalizar peça que pretendo usar no active_mode
         selected_x = selected_board_info_piece[1]
         selected_y = selected_board_info_piece[2]
-        board_x = selected_board_info_piece[3]
-        board_y = selected_board_info_piece[4]
-        row = selected_board_info_piece[5]
-        col = selected_board_info_piece[6]
+        # Desenhar movimentos activos possíveis
+        if len(player.get_agressive_moves()) != 0:
+            player_view.draw_view_piece_select(selected_x, selected_y, RED)
 
-        # sinalizar que peça selecionei
-        piece_selected = selected_board_info_piece[0].get_cell(row, col)
+            board_x = selected_board_info_piece[3]
+            board_y = selected_board_info_piece[4]
+            print(player.get_agressive_moves())
+            player_view.draw_active_moves(board_x, board_y, player)
 
-        player_view.draw_view_piece_select(selected_x, selected_y, RED)
-
-        # draws the possible moves (w/ green colour) for the selected piece
-        #  draw_possible_pos(board_x, board_y, moves, radius)
-
-        player_view.draw_active_moves(board_x, board_y, player)
-
-        game_view.refresh_window()
-        selected_board = selected_board_info_piece[0]
-
-        # phase2
-
-        selected_board_info_piece = None
         result = False
         while not result:
-
             selected_board_info_piece = selected_board_piece(boards)
-
-            if selected_board_info_piece == -1:
-                result = True  # voltar a selecionar outra peça
-
-            elif selected_board_info_piece is not None:
-                result = active_mode2(player.get_agressive_moves(), selected_board, piece_selected,
-                                      selected_board_info_piece, vector_for_active)
-
-                if result is True:
-                    phase2_player = True
-
+            if selected_board_info_piece == -1:  # Pretendo selecionar outra peça
+                result = True
             else:
-                continue
-    game_view.draw_game(game)
 
-    return True
+                if selected_board_info_piece is not None and selected_board_info_piece[
+                    0].get_color() != color_board_passive_move and len(player.get_agressive_moves()) != 0:
 
+                    board2 = selected_board_info_piece[0]
+                    row = selected_board_info_piece[5]  # Local onde escolhi jogar
+                    col = selected_board_info_piece[6]
 
-"""
-    # Continuar jogo
-    run = True
-    while run:
-        game_view.drawGame(WIN, board_view, game)
+                    act_move = player.get_agressive_moves()[0]
+                    act_move_row, act_move_col = act_move[0], act_move[1]
 
-        pygame.display.update()"""
+                    if player.verify_limits((row, col)) and board2.get_index() == board.get_index():
+
+                        if act_move_row == row and act_move_col == col:  # movimento activo possível foi o que selecionei
+                            player.do_active_move(board2, piece, aux_result[2], vector_for_active)
+                            result = True
+                            phase2_player = True
+                        else:
+                            continue
+
+        game_view.draw_game(game)
+
 
 main()
