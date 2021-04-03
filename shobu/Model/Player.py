@@ -111,6 +111,14 @@ class Player:
 
         self.__aggressive_moves = result_moves
 
+    def agr_move_cal(self, board_to_play, vector_move, piece_to_move, board_played):
+
+
+
+
+
+
+
     def get_color(self):
         return self.__color
 
