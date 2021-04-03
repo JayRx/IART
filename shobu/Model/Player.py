@@ -131,7 +131,7 @@ class Player:
                             cell2,board_to_play) and not self.verify_is_piece(cell3,board_to_play):
                         new_local = cell2
                         self.__aggressive_moves.append(new_local)
-                        return piece_to_move, cell1, vector_move
+                        return True, piece_to_move, cell1, vector_move
 
                 # Caso XO_$, where $ is out of the board
                 if self.verify_limits(cell1) and self.verify_limits(cell2) and not self.verify_limits(cell3):
