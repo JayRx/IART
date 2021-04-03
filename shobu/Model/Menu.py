@@ -188,8 +188,102 @@ def menu2():
 # Menu 3
 def menu3():
     print(
-        "Hello Menu 2 !\n")
+        "Computer1 Vs Computer2 !\n")
+
+    input_done = True
+    computer1 = None
+    computer2 = None
+    #Escolher em cima qual minimax queremos pruning ou não para cada um deles
+
+
+    while input_done:
+        print("Escolha se quer: 4- minimax vs minimax, 5- minimax vs minimax pruning, 6- minimax pruning vs pruning\n")
+        print(
+
+            "9. Back")
+        print(
+            "0. Quit")
+        choice = input(" >>  ")
+        if int(choice) == 4:
+            pass
+            # meter algoritmos mimimax nos computers
+            input_done = False
+        elif int(choice) == 5:
+            pass
+            # meter computer1 com minimax e computer2 com minimax pruning
+            input_done = False
+        elif int(choice) == 6:
+            pass
+            # meter computers com pruning vs pruning
+            input_done = False
+        else:
+            exec_menu(choice)
+    input_done = True
+
+
+    input_done = True
+    while input_done:
+        print("Escolha a dificuldade do computador1: 4- easy, 5- medium, 6- hard: ")
+        print(
+
+            "9. Back")
+        print(
+            "0. Quit")
+        choice = input(" >>  ")
+
+        if int(choice) == 4:
+            pass
+            # computador1 easy/ minimax alocar
+            input_done = False
+        elif int(choice) == 5:
+            pass
+            # computador1 medium/ minimax alocar computer1
+            input_done = False
+        elif int(choice) == 6:
+            pass
+            # computador1 hard/ minimax alocar computer1
+            input_done = False
+        else:
+            exec_menu(choice)
+    input_done = True
+
+
+
+    while input_done:
+        print("Escolha a dificuldade do computador2: 4- easy, 5- medium, 6- hard: ")
+        print(
+
+            "9. Back")
+        print(
+            "0. Quit")
+        choice = input(" >>  ")
+
+        if int(choice) == 4:
+            pass
+            # computador2 easy/ minimax alocar
+            input_done = False
+        elif int(choice) == 5:
+            pass
+            # computador2 medium/ minimax alocar computer1
+            input_done = False
+        elif int(choice) == 6:
+            pass
+            # computador2 hard/ minimax alocar computer1
+            input_done = False
+        else:
+            exec_menu(choice)
+
+
+
+
+    # resto do código para computadores jogarem
+
+
+
+
+
     print(
+
         "9. Back")
     print(
         "0. Quit")
@@ -218,6 +312,7 @@ menu_actions = {
     '1': menu1,
     '2': menu2,
     '3': menu3,
+
     '9': back,
     '0': exit,
 }
