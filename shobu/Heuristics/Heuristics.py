@@ -1,7 +1,7 @@
 import math
 
-from shobu.Model.Board import Board
-from shobu.Model.Player import Player
+
+
 
 from shobu.Model.constants import *
 
