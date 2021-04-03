@@ -122,7 +122,7 @@ class Player:
                 # Três possíveis células a seguir à peça a mover
                 cell1 = piece_to_move.get_row() + aux_vect[0], piece_to_move.get_col() + aux_vect[1]
                 cell2 = piece_to_move.get_row() + vector_move[0], piece_to_move.get_col() + vector_move[1]
-                cell3 = piece_to_move.get_row() + aux_vect[0] * 3, piece_to_move.get_col() + aux_vect[1]
+                cell3 = piece_to_move.get_row() + aux_vect[0] * 3, piece_to_move.get_col() + aux_vect[1] *3
 
                 # Caso XO__
 
