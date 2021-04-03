@@ -9,7 +9,7 @@ class Minimax:
         self.player2 = player2
 
     # depth - depth of the search tree
-    def minimax(self, boards, depth, max_player, game_controller):
+    def minimax(self, boards, depth, max_player, game_controller, alpha, beta):
         # in depth 0 of the tree
         if depth == 0 or game_controller.objective_test(boards, self.player2) != -1:
             # this means that in this board, we have a winner
@@ -23,12 +23,16 @@ class Minimax:
             for turn in self.get_all_turns(game_controller, WHITE, self.player2, boards):
                 new_boards = turn.get_boards_after_play()
                 # gets an evaluation for each of the turns
-                evaluation = self.minimax(new_boards, depth-1, False, game_controller)[0]  # here only max_evalue is needed
+                evaluation = self.minimax(new_boards, depth-1, False, game_controller, alpha, beta)[0]  # here only max_evalue is needed
                 max_evalue = max(max_evalue, evaluation)
+                alpha = max(alpha, max_evalue)
 
                 if max_evalue == evaluation:
                     # saves the turn for this case (the one that generates the best evaluation)
                     best_turn = new_boards
+                
+                if beta <= alpha:
+                    break
 
             return max_evalue, best_turn
             
@@ -39,12 +43,16 @@ class Minimax:
             for turn in self.get_all_turns(game_controller, BLACK, self.player1, boards):
                 new_boards = turn.get_boards_after_play()
                 # gets an evaluation for each of the turns
-                evaluation = self.minimax(new_boards, depth-1, True, game_controller)[0]  # here only min_evalue is needed
+                evaluation = self.minimax(new_boards, depth-1, True, game_controller, alpha, beta)[0]  # here only min_evalue is needed
                 min_evalue = min(min_evalue, evaluation)
+                beta = min(beta, min_evalue)
 
                 if min_evalue == evaluation:
                     # saves the turn for this case (the one that generates the best evaluation)
                     best_turn = new_boards
+
+                if beta <= alpha:
+                    break
 
             return min_evalue, best_turn
 

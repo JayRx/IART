@@ -341,7 +341,7 @@ def main():
         # Player 2 is the white player (is the ai)  (maybe implement a menu + change player?)
         if (ai == True):
             minmaxAlgorithm = Minimax(player1, player2)
-            value, new_boards = minmaxAlgorithm.minimax(game.get_boards(), 1, WHITE, game_controller)
+            value, new_boards = minmaxAlgorithm.minimax(game.get_boards(), 1, WHITE, game_controller, float('-inf'), float('inf'))
             game.ai_movement(new_boards)
             res = game_controller.objective_test(new_boards, player1)
             if res == -1:
