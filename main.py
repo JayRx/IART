@@ -1,6 +1,7 @@
 import math
 
 import pygame
+import time
 import sys
 
 from shobu.Model.Menu import Menu, main_menu
@@ -60,22 +61,14 @@ def main():
         player_play(game, game_view, player1,
                     player1_view)
         check_winner(game_controller, game, player1)
-        if res == -1:
-            print("game isn't over!")
-        else:
-            print("GAME OVER!")
-
 
         # Player 2 is the white player (is the ai)  (maybe implement + change player?)
         if (ai == True):
             minmaxAlgorithm = Minimax(player1, player2)
             value, new_boards = minmaxAlgorithm.minimax(game.get_boards(), 1, WHITE, game_controller, float('-inf'), float('inf'))
+            time.sleep(1)
             game.ai_movement(new_boards)
             check_winner(game_controller, game, player2)
-            if res == -1:
-                print("game isn't over!")
-            else:
-                print("GAME OVER!")
         else:
             player_play(game, game_view, player2, player2_view)
             check_winner(game_controller, game, player2)
