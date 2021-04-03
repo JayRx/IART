@@ -1,6 +1,6 @@
 from copy import deepcopy
 from shobu.State.State import State, MinimaxState
-from shobu.Model.constants import BLACK, WHITE
+from shobu.Model.constants import BLACK, WHITE, SQUARE_SIZE, BOARD_OUTLINE
 from shobu.Heuristics.Heuristics import Heuristics
 
 class Minimax:
@@ -21,13 +21,14 @@ class Minimax:
             max_evalue = float('-inf')
             best_turn = None
             for turn in self.get_all_turns(game_controller, WHITE, self.player2, boards):
+                new_boards = turn.get_boards_after_play()
                 # gets an evaluation for each of the turns
-                evaluation = self.minimax(turn.get_boards_after_play(), depth-1, False, game_controller)[0]  # here only max_evalue is needed
+                evaluation = self.minimax(new_boards, depth-1, False, game_controller)[0]  # here only max_evalue is needed
                 max_evalue = max(max_evalue, evaluation)
 
                 if max_evalue == evaluation:
                     # saves the turn for this case (the one that generates the best evaluation)
-                    best_turn = turn
+                    best_turn = new_boards
 
             return max_evalue, best_turn
             
@@ -36,22 +37,25 @@ class Minimax:
             min_evalue = float('inf')
             best_turn = None
             for turn in self.get_all_turns(game_controller, BLACK, self.player1, boards):
+                new_boards = turn.get_boards_after_play()
                 # gets an evaluation for each of the turns
-                evaluation = self.minimax(turn.get_boards_after_play(), depth-1, True, game_controller)[0]  # here only min_evalue is needed
+                evaluation = self.minimax(new_boards, depth-1, True, game_controller)[0]  # here only min_evalue is needed
                 min_evalue = min(min_evalue, evaluation)
 
                 if min_evalue == evaluation:
                     # saves the turn for this case (the one that generates the best evaluation)
-                    best_turn = turn
+                    best_turn = new_boards
 
             return min_evalue, best_turn
 
-    def generate_turn(self, boards, pieces, move_vector, game):
+    def generate_turn(self, player, boards, pieces, adv_piece, move_vector, game):
         board_passive, board_aggressive = boards
         piece_passive, piece_aggressive = pieces
 
-        board_passive.change_piece_cell(piece_passive, move_vector)
-        board_aggressive.change_piece_cell(piece_aggressive, move_vector)
+        destination_cell_passive = piece_passive.get_row() + move_vector[0], piece_passive.get_col() + move_vector[1]
+
+        board_passive.change_piece_cell(piece_passive, destination_cell_passive)
+        player.do_active_move(board_aggressive, piece_aggressive, adv_piece, move_vector)
         
         return boards
 
@@ -62,35 +66,40 @@ class Minimax:
 
             # for each of player's color pieces, in each (passive) board 
             for piece_passive in board_passive.get_all_pieces(color):
+                
+                # gets color of chosen board for passive move
+                board_passive_color = board_passive.get_color() 
 
                 # gets all possible passive moves for that piece
                 passive_moves = player.calc_moves(board_passive, piece_passive)
-                # gets color of chosen board for passive move
-                board_passive_color = board_passive.get_color() 
 
                 for pas_move in passive_moves:
 
                     # for each possible board of aggressive move (has to be board of opposite color)
                     for board_aggressive in game.obtain_opposite_color_boards(board_passive_color):
+                        
                         move_vector = pas_move[0] - piece_passive.get_row(), pas_move[1] - piece_passive.get_col()
 
-                        # for each piece of the player playing an aggressive move
+                        # for each piece of the player playing an aggressive move (in one of the boards)
                         for piece_aggressive in board_aggressive.get_all_pieces(color):
+
                             # compute and gets an aggressive move
-                            player.agr_move_cal(board_aggressive, move_vector, piece_aggressive)
-                            aggressive_move = player.get_agressive_moves()
+                            res_calc_aggressive = player.agr_move_cal2(board_aggressive, move_vector, piece_aggressive, board_passive_color)
+                            # saves if there's an adversary piece removed with this movement
+                            adv_piece = res_calc_aggressive[2]
                         
+                            # creation of temporary copies (board+pieces)
                             # creates a copy of the boards being considered
                             temp_board_passive = deepcopy(board_passive)
                             temp_board_aggressive = deepcopy(board_aggressive)
                             temp_boards = temp_board_passive, temp_board_aggressive
 
-                            temp_piece_passive = temp_board_passive.get_cell(piece_passive.get_row(), piece_passive.get_col()) #has to be != 0
-                            temp_piece_aggressive = temp_board_aggressive.get_cell(piece_aggressive.get_row(), piece_aggressive.get_col()) #has to be != 0
+                            temp_piece_passive = temp_board_passive.get_cell(piece_passive.get_row(), piece_passive.get_col())
+                            temp_piece_aggressive = temp_board_aggressive.get_cell(piece_aggressive.get_row(), piece_aggressive.get_col())
                             temp_pieces = temp_piece_passive, temp_piece_aggressive
 
                             # generates a new boards (passive+aggressive) for each possible turn, saves it as a MinimaxState
-                            possible_play_boards = self.generate_turn(temp_boards, temp_pieces, move_vector, game)
+                            possible_play_boards = self.generate_turn(player, temp_boards, temp_pieces, adv_piece, move_vector, game)
                             turn = MinimaxState(game, boards, possible_play_boards, temp_pieces)    # boards represents what is being displayed now, before the move (board untouched)
                             
                             # appends the turn that can be done with that pieces, giving as result possible_play_boards

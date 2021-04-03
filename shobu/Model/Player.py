@@ -180,8 +180,8 @@ class Player:
                     if self.verify_is_piece_dif_color(cell1,board_to_play):
                         new_local = cell1
                         self.__aggressive_moves.append(new_local)
-
-                    return True, piece_to_move, cell1, vector_move
+                        return True, piece_to_move, cell1, vector_move
+                        
                 # Caso X_(_ ou $)
                 if self.verify_limits(cell1):
                     if not self.verify_is_piece(cell1,board_to_play):
@@ -196,7 +196,8 @@ class Player:
             new_row = adv_piece[0] + vector_move[0]
             new_col = adv_piece[1] + vector_move[1]
             piece = board.get_cell(adv_piece[0],adv_piece[1])
-            board.change_piece_cell(piece, (new_row,new_col))
+            if (piece != 0):
+                board.change_piece_cell(piece, (new_row,new_col))
 
         new_row = piece_to_move.get_row() + vector_move[0]
         new_col = piece_to_move.get_col() + vector_move[1]
