@@ -325,8 +325,6 @@ def main():
 
     game_controller = GameController(game, game_view)
 
-    heuristics = Heuristics()
-
     game_controller.start()
     while run:
 
@@ -402,6 +400,11 @@ def player_play(game, game_view, player, player_view,
     vector_for_active = None
     color_board_passive_move = None
     phase1_player = False
+
+    heuristics = Heuristics()
+
+    heuristics.calc(boards, player)
+    heuristics.print_value()
 
     while not phase1_player:
         move_done_pos = []
