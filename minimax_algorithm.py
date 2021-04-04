@@ -20,7 +20,7 @@ class Minimax:
         if max_player:
             max_evalue = float('-inf')
             best_turn = None
-            for turn in self.get_all_turns(game_controller, WHITE, self.player2, boards):
+            for turn in self.get_all_turns(game_controller, self.player2.get_color(), self.player2, boards):
                 new_boards = turn.get_boards_after_play()
                 # gets an evaluation for each of the turns
                 evaluation = self.minimax(new_boards, depth-1, False, game_controller, alpha, beta)[0]  # here only max_evalue is needed
@@ -40,7 +40,7 @@ class Minimax:
 
             min_evalue = float('inf')
             best_turn = None
-            for turn in self.get_all_turns(game_controller, BLACK, self.player1, boards):
+            for turn in self.get_all_turns(game_controller, self.player1.get_color(), self.player1, boards):
                 new_boards = turn.get_boards_after_play()
                 # gets an evaluation for each of the turns
                 evaluation = self.minimax(new_boards, depth-1, True, game_controller, alpha, beta)[0]  # here only min_evalue is needed

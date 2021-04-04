@@ -256,13 +256,14 @@ def menu3():
     game_view = GameView(WIN)
 
     player1_view = PlayerView(WIN)
-    computer_view = PlayerView(WIN)
+    player2_view = PlayerView(WIN)
     game_view = GameView(WIN)
 
     game_controller = GameController(game, game_view)
 
     game_controller.start()
 
+    input_done = True
     while input_done:
         print("Escolha a dificuldade do computador1: 4- easy, 5- medium, 6- hard: ")
         print(
@@ -313,24 +314,33 @@ def menu3():
             exec_menu(choice)
     input_done = True
 
+    minmaxAlgorithm = Minimax(player1, player2)
+    minmaxAlgorithm2 = Minimax(player2, player1)
+
     while run:
 
         game_view = GameView(WIN)
 
         # Player 2 is the white player (is the ai)
+
+        game_view.draw_game(game)
+        time.sleep(2)
         
-        minmaxAlgorithm = Minimax(player1, player2)
-        value, new_boards = minmaxAlgorithm.minimax(game.get_boards(), difficulty, BLACK, game_controller, float('-inf'), float('inf'))
+        value, new_boards = minmaxAlgorithm.minimax(game.get_boards(), difficulty, BLACK, game_controller, -1000, 1000)
         time.sleep(1)
         game.ai_movement(new_boards)
-        check_winner(game_controller, game, player1)
+        game_view.draw_game(game)
+        winner = check_winner(game_controller, game, player1)
+        if winner:
+            run = False
 
-        minmaxAlgorithm = Minimax(player2, player1)
-        value, new_boards = minmaxAlgorithm.minimax(game.get_boards(), difficulty2, WHITE, game_controller, float('-inf'), float('inf'))
+        value_pl2, new_boards_pl2 = minmaxAlgorithm2.minimax(game.get_boards(), difficulty2, WHITE, game_controller, float('-inf'), float('inf'))
         time.sleep(1)
-        game.ai_movement(new_boards)
-        check_winner(game_controller, game, player2)
-
+        game.ai_movement(new_boards_pl2)
+        game_view.draw_game(game)
+        winner = check_winner(game_controller, game, player2)
+        if winner:
+            run = False
 
     print(
 
@@ -381,5 +391,7 @@ def check_winner(game_controller, game, player):
     res = game_controller.objective_test(game.get_boards(), player)
     if res == -1:
         print("game isn't over!")
+        return False
     else:
         print("GAME OVER!")
+        return True

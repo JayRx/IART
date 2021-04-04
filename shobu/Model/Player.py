@@ -190,8 +190,9 @@ class Player:
         if len(adv_piece) != 0:
 
             aux_vec = vector_move[0] // 2, vector_move[1] // 2
-            cell1 = board.get_cell(adv_piece[0] + aux_vec[0], adv_piece[1] + aux_vec[1])
-            cell2 = board.get_cell(adv_piece[0] + aux_vec[0], adv_piece[1] - aux_vec[1])
+            cell1 = adv_piece[0] + aux_vec[0], adv_piece[1] + aux_vec[1]
+            cell2 = adv_piece[0] + aux_vec[0], adv_piece[1] - aux_vec[1]
+          
 
             if abs (vector_move[0]) >1 or abs(vector_move[1]) < 1 and self.verify_limits(cell1) and self.verify_limits(cell2) and not self.verify_is_piece(cell1,board) and not self.verify_is_piece(cell2,board):
 
