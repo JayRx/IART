@@ -201,10 +201,10 @@ def menu2():
         else:
             exec_menu(choice)
     input_done = True
-
+    game_view = GameView(WIN)
     while run:
 
-        game_view = GameView(WIN)
+
         player_play(game, game_view, player1,
                     player1_view)
         game_view.draw_game(game)
@@ -216,8 +216,8 @@ def menu2():
         # Player 2 is the white player (is the ai)
         
         minmaxAlgorithm = Minimax(player1, computer)
-        value, new_boards = minmaxAlgorithm.minimax(game.get_boards(), difficulty, WHITE, game_controller, float('-inf'), float('inf'))
-        time.sleep(1)
+        value, new_boards = minmaxAlgorithm.minimax(game.get_boards(), difficulty, WHITE, game_controller, float('-1000'), float('1000'))
+        time.sleep(2)
         game.ai_movement(new_boards)
         game_view.draw_game(game)
         winner = check_winner(game_controller, game, computer)
@@ -272,7 +272,8 @@ def menu3():
     game_controller = GameController(game, game_view)
 
     game_controller.start()
-
+    difficulty = 0
+    difficulty2 = 0
     input_done = True
     while input_done:
         print("Escolha a dificuldade do computador1: 4- easy, 5- medium, 6- hard: ")
@@ -334,7 +335,7 @@ def menu3():
         # Player 2 is the white player (is the ai)
 
         game_view.draw_game(game)
-        time.sleep(2)
+        time.sleep(10)
         
         value, new_boards = minmaxAlgorithm.minimax(game.get_boards(), difficulty, BLACK, game_controller, -1000, 1000)
         time.sleep(1)
@@ -346,9 +347,10 @@ def menu3():
             break
 
         value_pl2, new_boards_pl2 = minmaxAlgorithm2.minimax(game.get_boards(), difficulty2, WHITE, game_controller, float('-inf'), float('inf'))
-        time.sleep(1)
+
         game.ai_movement(new_boards_pl2)
         game_view.draw_game(game)
+        time.sleep(10)
         winner = check_winner(game_controller, game, player2)
         if winner:
             run = False
