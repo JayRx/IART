@@ -117,12 +117,15 @@ def menu1():
         game_view = GameView(WIN)
         player_play(game, game_view, player1,
                     player1_view)
+        winner = check_winner(game_controller, game, player1)
+        if winner:
+            run = False
+            break
 
         player_play(game, game_view, player2, player2_view)
-
-        res = game_controller.objective_test(game.get_boards(), player1)
-        if res == -1:
-            print("gama not over")
+        winner = check_winner(game_controller, game, player2)
+        if winner:
+            run = False
 
     print(
         "9. Back")
@@ -204,7 +207,11 @@ def menu2():
         game_view = GameView(WIN)
         player_play(game, game_view, player1,
                     player1_view)
-        check_winner(game_controller, game, player1)
+        game_view.draw_game(game)
+        winner = check_winner(game_controller, game, player1)
+        if winner:
+            run = False
+            break
 
         # Player 2 is the white player (is the ai)
         
@@ -212,7 +219,10 @@ def menu2():
         value, new_boards = minmaxAlgorithm.minimax(game.get_boards(), difficulty, WHITE, game_controller, float('-inf'), float('inf'))
         time.sleep(1)
         game.ai_movement(new_boards)
-        check_winner(game_controller, game, computer)
+        game_view.draw_game(game)
+        winner = check_winner(game_controller, game, computer)
+        if winner:
+            run = False
 
     print(
         "9. Back")
@@ -333,6 +343,7 @@ def menu3():
         winner = check_winner(game_controller, game, player1)
         if winner:
             run = False
+            break
 
         value_pl2, new_boards_pl2 = minmaxAlgorithm2.minimax(game.get_boards(), difficulty2, WHITE, game_controller, float('-inf'), float('inf'))
         time.sleep(1)
@@ -392,6 +403,11 @@ def check_winner(game_controller, game, player):
     if res == -1:
         print("game isn't over!")
         return False
-    else:
-        print("GAME OVER!")
+    elif res == 1 or res == 2:
+        if player.get_color == BLACK:
+            player_color = "Black"
+        else:
+            player_color = "White"
+
+        print("GAME OVER! " + str(player_color) + " player wins!")
         return True
