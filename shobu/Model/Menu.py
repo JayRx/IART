@@ -158,8 +158,8 @@ def menu2():
               Board(1, 1, LIGHT_BROWN, 3)]
     # Passive move
 
-    player1 = Player(WHITE, (boards[2], boards[3]))
-    computer = Player(BLACK, (boards[0], boards[1]))
+    player1 = Player(BLACK, (boards[2], boards[3]))
+    computer = Player(WHITE, (boards[0], boards[1]))
 
     game = Game(boards, player1, computer)
 
@@ -203,14 +203,22 @@ def menu2():
     while run:
 
         time.sleep(2)
-        aux_game = best_move_max_p1(game, 1)
+        player_play(game, game_view, player1,
+                    player1_view)
+        game_view.draw_game(game)
+        winner = check_winner(game_controller, game, player1)
+        if winner:
+            run = False
+            break
+
+
+        aux_game = best_move_min_p2(game, difficulty)
 
         game = deepcopy(aux_game)
+
         game_view.draw_game(game)
         winner = check_winner(game_controller, game, computer)
 
-        player_play(game, game_view, player1,
-                    player1_view)
         game_view.draw_game(game)
         winner = check_winner(game_controller, game, player1)
         if winner:

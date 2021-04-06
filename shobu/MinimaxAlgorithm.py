@@ -147,9 +147,9 @@ def minimax(depth, is_max_player1, game):
                                                         if rest[0]:
                                                             game.get_player2().do_active_move(board2, rest[1], rest[2],
                                                                                               vector_move)
-
-                                                            best = max(best,
-                                                                       minimax(depth - 1, is_max_player1, game))
+                                                            aux_val = minimax(depth - 1, is_max_player1, game)
+                                                            best = min(best,
+                                                                       aux_val)
                                                             game = copy.copy(bef_act_game)
                                                     # voltar para o estado em que só tinha feito o passive move
 
@@ -235,7 +235,7 @@ def best_move_max_p1(game, depth):
 
 
 def best_move_min_p2(game, depth):
-    best = float('inf')
+    best = float('-inf')
     best_move_game = None
     for board in game.get_player2().get_boards():
 
@@ -286,7 +286,7 @@ def best_move_min_p2(game, depth):
 
                                                         move_val = minimax(depth , True, game)
 
-                                                        if move_val < best:
+                                                        if move_val > best:
                                                             best = move_val
                                                             best_move_game = copy.copy(game)
                                                             game = copy.copy(bef_act_game)
