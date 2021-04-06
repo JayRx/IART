@@ -2,6 +2,7 @@ from copy import deepcopy
 from shobu.State.State import State, MinimaxState
 from shobu.Model.constants import BLACK, WHITE, SQUARE_SIZE, BOARD_OUTLINE
 from shobu.Heuristics.Heuristics import Heuristics
+import globals
 
 
 class Minimax:
