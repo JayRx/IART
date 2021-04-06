@@ -141,11 +141,12 @@ class Board:
                     if (current_piece.get_color() == player_color):
                         print(str(current_piece) + "|")
 
-    def print_all_board(self):
+# for game state exporting
+    def get_all_board_string(self):
+        board = ""
         for row in range(ROWS):
             for col in range(COLS):
-                # if cell has a piece
-                if (self.__board_info[row][col] != 0) :
-                    current_piece = self.__board_info[row][col] 
-                    print(str(current_piece) + "|")                        
+                    current_cell = self.__board_info[row][col] 
+                    board += (str(current_cell)+"\n")
+        return board                        
         

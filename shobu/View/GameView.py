@@ -59,3 +59,16 @@ class GameView:
 
     def refresh_window(self):
         pygame.display.update()
+
+    def export_game_state(self, game, mode, player_turn):
+        save_file = open("save.txt", "w")
+        save_file.write("mode\n")
+        save_file.write(str(mode)+"\n")
+        save_file.write("player_turn\n")
+        save_file.write(str(player_turn)+"\n")
+        save_file.write("Boards\n")
+        for board in game.get_boards():
+            board_content = board.get_all_board_string()
+            save_file.write(str(board_content))
+
+        save_file.close()

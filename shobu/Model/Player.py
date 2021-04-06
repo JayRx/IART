@@ -508,6 +508,10 @@ def selected_board_piece(boards):
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
+            
+            # export game state here!
+            
+
             pygame.quit()
             sys.exit()  # se clicamos para sair do jogo
 

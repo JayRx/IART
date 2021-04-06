@@ -153,10 +153,6 @@ def menu2():
 
     # Poder escolher dificuldade para escolher algoritmo se quero Hints no jogador humano
 
-
-    print(
-        "Human vs Human !\n")
-
     FPS = 60
 
     WIN = pygame.display.set_mode((DISPLAY_SIZE, DISPLAY_SIZE))  # Display game
@@ -253,6 +249,11 @@ def menu3():
     computer1 = None
     computer2 = None
     #Escolher em cima qual minimax queremos pruning ou não para cada um deles
+
+    # identifies game mode
+    mode = 3
+    # identifies player turn
+    player_turn = "BLACK"
 
     FPS = 60
 
@@ -357,6 +358,20 @@ def menu3():
             run = False
             break
 
+        player_turn = "WHITE"
+
+        print("Click to continue playing...(If you quit, game state is saved in text)\n")
+        action = game_view.get_next_command(pygame.mouse.get_pos())
+        if (action == Action.Quit):
+            print("Saving...")
+
+            game_view.export_game_state(game, mode, player_turn)
+
+            pygame.quit()
+            sys.exit()  # se clicamos para sair do jogo
+        else:
+            print("Resuming...\n")
+
         value_pl2, new_boards_pl2 = minmaxAlgorithm2.minimax(game.get_boards(), difficulty2, WHITE, game_controller, float('-inf'), float('inf'))
         time.sleep(1)
         game.ai_movement(new_boards_pl2)
@@ -368,6 +383,8 @@ def menu3():
         boards_test = game.get_boards()
         boards[2].print_all_board()
         time.sleep(5)
+
+        player_turn = "BLACK"
 
     print(
 
@@ -413,7 +430,7 @@ def menu4():
                     # read game mode
                     if (line == "mode\n"):
                         print("Li o mode!\n")
-                        inner_content = save_file.readline()
+                        mode_content = save_file.readline()
                         print(inner_content)
                         if inner_content == "1\n":
                             print("Hello ladies and gentlemen!\n")
@@ -425,18 +442,21 @@ def menu4():
                     # read player turn
                     elif (line == "player_turn\n"):
                         print("Li o player_turn!\n")
-                        inner_content = save_file.readline()
-                        print(inner_content)
-                        if inner_content == "BLACK\n":
+                        player_content = save_file.readline()
+                        print(player_content)
+                        if player_content == "BLACK\n":
                             print("Hello player1!\n")
-                        elif inner_content == "WHITE\n":
+                        elif player_content == "WHITE\n":
                             print("Hello player 2!\n")
                     
                     # read board
                     elif (line == "board\n"):
                         print("Li o board!\n")
                         valid_board = True
-                        for board_index in range(4):    
+
+                        # 4 boards
+                        for board_index in range(4):
+                            # each board has 16 cells    
                             for board_cell in range(16):
                                 inner_content = save_file.readline()
                                 if (inner_content == "0\n"):
@@ -452,9 +472,9 @@ def menu4():
                             if not valid_board:
                                 print("file reading aborted! In board index: " + str(board_index))
                                 break
-                            print(str(board_index) + " board added!")
+                            print(str(board_index) + " board line added!")
 
-
+                # load game state
                 
 
                 save_file.close()
