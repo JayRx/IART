@@ -2,7 +2,6 @@ import sys
 
 import pygame
 
-
 from shobu.Heuristics.Heuristics import Heuristics
 from shobu.Model.constants import ROWS, COLS, SQUARE_SIZE, BOARD_OUTLINE, RED, BLUE
 from shobu.Model.Board import Board
@@ -103,7 +102,7 @@ class Player:
         self.__row = piece.get_row()
         self.__col = piece.get_col()
 
-    def agr_move_cal2(self, board_to_play, vector_move, piece_to_move, color_board_played):
+    def active_move(self, board_to_play, vector_move, piece_to_move, color_board_played):
         self.get_agressive_moves().clear()
         if board_to_play.get_color() != color_board_played:
 
@@ -172,7 +171,7 @@ class Player:
 
                 # Caso XO$
                 if self.verify_limits(cell1) and not self.verify_limits(cell2):
-                    if  self.verify_is_piece_dif_color(cell1, board_to_play):
+                    if self.verify_is_piece_dif_color(cell1, board_to_play):
                         new_local = cell1
                         self.__aggressive_moves.append(new_local)
 
@@ -192,15 +191,14 @@ class Player:
             aux_vec = vector_move[0] // 2, vector_move[1] // 2
             cell1 = adv_piece[0] + aux_vec[0], adv_piece[1] + aux_vec[1]
             cell2 = adv_piece[0] + aux_vec[0], adv_piece[1] - aux_vec[1]
-          
 
-            if abs (vector_move[0]) >1 or abs(vector_move[1]) < 1 and self.verify_limits(cell1) and self.verify_limits(cell2) and not self.verify_is_piece(cell1,board) and not self.verify_is_piece(cell2,board):
+            if abs(vector_move[0]) > 1 or abs(vector_move[1]) < 1 and self.verify_limits(cell1) and self.verify_limits(
+                    cell2) and not self.verify_is_piece(cell1, board) and not self.verify_is_piece(cell2, board):
 
-
-                    new_row = adv_piece[0] + aux_vec[0]
-                    new_col = adv_piece[1] + aux_vec[1]
-                    piece = board.get_cell(adv_piece[0], adv_piece[1])
-                    board.change_piece_cell(piece, (new_row, new_col))
+                new_row = adv_piece[0] + aux_vec[0]
+                new_col = adv_piece[1] + aux_vec[1]
+                piece = board.get_cell(adv_piece[0], adv_piece[1])
+                board.change_piece_cell(piece, (new_row, new_col))
             else:
 
                 new_row = adv_piece[0] + vector_move[0]
@@ -369,7 +367,7 @@ def player_play(game, game_view, player, player_view,
 
                 if player.verify_limits((row, col)) and player.verify_is_piece_equal_color((row, col), board):
                     piece = board.get_cell(row, col)
-                    aux_result = player.agr_move_cal2(board, vector_for_active, piece, color_board_passive_move)
+                    aux_result = player.active_move(board, vector_for_active, piece, color_board_passive_move)
                     if aux_result[0] is True:
                         result = True
 
@@ -554,3 +552,10 @@ def get_mouse_pos():
 
     return pos
 
+
+def obtain_opposite_color_boards(self, color_board_played):
+    board_index_diff_color = []
+    for board in self.__game.get_boards():
+        if board.get_color() != color_board_played:
+            board_index_diff_color.append(board.get_index())
+    return board_index_diff_color

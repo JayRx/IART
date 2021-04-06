@@ -10,6 +10,7 @@ from shobu.Controller.GameController import GameController
 from shobu.Model.Board import Board
 from shobu.Model.Game import Game
 from shobu.Model.Player import Player, player_play
+from shobu.MinimaxAlgorithm import *
 from shobu.Model.constants import SQUARE_SIZE, BOARD_OUTLINE, WIDTH, GREEN, BLUE, \
     LIGHT_BROWN, DARK_BROWN, BOARD_PADDING, BLACK, DISPLAY_SIZE, WHITE, MoveDirect, ROWS, COLS
 from shobu.View.BoardView import BoardView
@@ -143,10 +144,6 @@ def menu2():
 
     # Poder escolher dificuldade para escolher algoritmo se quero Hints no jogador humano
 
-
-    print(
-        "Human vs Human !\n")
-
     FPS = 60
 
     WIN = pygame.display.set_mode((DISPLAY_SIZE, DISPLAY_SIZE))  # Display game
@@ -202,8 +199,8 @@ def menu2():
             exec_menu(choice)
     input_done = True
     game_view = GameView(WIN)
-    while run:
 
+    while run:
 
         player_play(game, game_view, player1,
                     player1_view)
@@ -214,11 +211,14 @@ def menu2():
             break
 
         # Player 2 is the white player (is the ai)
-        
-        minmaxAlgorithm = Minimax(player1, computer)
+
+        """minmaxAlgorithm = Minimax(player1, computer)
         value, new_boards = minmaxAlgorithm.minimax(game.get_boards(), difficulty, WHITE, game_controller, float('-1000'), float('1000'))
+        """
         time.sleep(2)
-        game.ai_movement(new_boards)
+        aux_game = best_move_min_p2(game, difficulty)
+
+        game = aux_game
         game_view.draw_game(game)
         winner = check_winner(game_controller, game, computer)
         if winner:
@@ -242,7 +242,7 @@ def menu3():
     input_done = True
     computer1 = None
     computer2 = None
-    #Escolher em cima qual minimax queremos pruning ou não para cada um deles
+    # Escolher em cima qual minimax queremos pruning ou não para cada um deles
 
     FPS = 60
 
@@ -336,7 +336,7 @@ def menu3():
 
         game_view.draw_game(game)
         time.sleep(10)
-        
+
         value, new_boards = minmaxAlgorithm.minimax(game.get_boards(), difficulty, BLACK, game_controller, -1000, 1000)
         time.sleep(1)
         game.ai_movement(new_boards)
@@ -346,7 +346,8 @@ def menu3():
             run = False
             break
 
-        value_pl2, new_boards_pl2 = minmaxAlgorithm2.minimax(game.get_boards(), difficulty2, WHITE, game_controller, float('-inf'), float('inf'))
+        value_pl2, new_boards_pl2 = minmaxAlgorithm2.minimax(game.get_boards(), difficulty2, WHITE, game_controller,
+                                                             float('-inf'), float('inf'))
 
         game.ai_movement(new_boards_pl2)
         game_view.draw_game(game)

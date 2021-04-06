@@ -92,7 +92,7 @@ class Minimax:
                         for piece_aggressive in board_aggressive.get_all_pieces(color):
 
                             # compute and gets an aggressive move
-                            res_calc_aggressive = player.agr_move_cal2(board_aggressive, move_vector, piece_aggressive, board_passive_color)
+                            res_calc_aggressive = player.active_move(board_aggressive, move_vector, piece_aggressive, board_passive_color)
                             # saves if there's an adversary piece removed with this movement
                             adv_piece = res_calc_aggressive[2]
                         
