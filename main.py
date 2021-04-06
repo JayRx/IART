@@ -16,7 +16,6 @@ WIN = pygame.display.set_mode((DISPLAY_SIZE, DISPLAY_SIZE))  # Display game
 
 pygame.display.set_caption('Shobu')
 
-
 def main():
     main_menu()
 

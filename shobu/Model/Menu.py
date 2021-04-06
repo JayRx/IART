@@ -10,6 +10,8 @@ from shobu.Controller.GameController import GameController
 from shobu.Model.Board import Board
 from shobu.Model.Game import Game
 from shobu.Model.Player import Player, player_play
+
+import globals
 from shobu.Model.constants import SQUARE_SIZE, BOARD_OUTLINE, WIDTH, GREEN, BLUE, \
     LIGHT_BROWN, DARK_BROWN, BOARD_PADDING, BLACK, DISPLAY_SIZE, WHITE, MoveDirect, ROWS, COLS
 from shobu.View.BoardView import BoardView
@@ -50,7 +52,11 @@ def main_menu():
     print(
         "2. Menu: Human vs Computer")  # poder escolher easy, medium, hard para cada um dos dois
 
-    print("3. Menu: Computer vs Computer")  # poder escolher easy, medium, hard para cada um dos dois
+    print(
+        "3. Menu: Computer vs Computer")  # poder escolher easy, medium, hard para cada um dos dois
+
+    print(
+        "4. Import saved game state")
 
     print(
         "\n0. Quit")
@@ -126,6 +132,10 @@ def menu1():
         winner = check_winner(game_controller, game, player2)
         if winner:
             run = False
+
+        boards_test = game.get_boards()
+        boards[1].print_all_pieces(BLACK)
+        time.sleep(5)
 
     print(
         "9. Back")
@@ -207,7 +217,7 @@ def menu2():
         game_view = GameView(WIN)
         player_play(game, game_view, player1,
                     player1_view)
-        game_view.draw_game(game)
+        # game_view.draw_game(game)
         winner = check_winner(game_controller, game, player1)
         if winner:
             run = False
@@ -339,6 +349,8 @@ def menu3():
         value, new_boards = minmaxAlgorithm.minimax(game.get_boards(), difficulty, BLACK, game_controller, -1000, 1000)
         time.sleep(1)
         game.ai_movement(new_boards)
+        # print("This is the no. of iterations of the minimax: " + str(globals.it))
+        # time.sleep(10)
         game_view.draw_game(game)
         winner = check_winner(game_controller, game, player1)
         if winner:
@@ -352,6 +364,10 @@ def menu3():
         winner = check_winner(game_controller, game, player2)
         if winner:
             run = False
+        
+        boards_test = game.get_boards()
+        boards[2].print_all_board()
+        time.sleep(5)
 
     print(
 
@@ -362,6 +378,109 @@ def menu3():
     exec_menu(choice)
     return
 
+
+# Menu 4
+def menu4():
+    input_done = True
+    print(
+        "Saved game state !\n")
+
+    while input_done:
+        print(
+            "Are you sure you want to import the saved game state? (Filename 'save.txt' in root) Y/N"
+            )
+        choice = input(" >>  ")
+
+        ch = choice.lower()
+        if ch != 'y' and ch != 'n':
+            print(
+                "Invalid selection, please try again.\n")
+            menu_actions['main_menu']()
+        elif ch == 'n':
+            input_done = False
+        elif ch == 'y':
+            print("Trying to import 'save.txt'...\n")
+
+            # read of the file
+            try:
+                save_file = open("save.txt", "r")
+
+                # import of game structures
+
+                for line in save_file:
+                    #print(line)
+
+                    # read game mode
+                    if (line == "mode\n"):
+                        print("Li o mode!\n")
+                        inner_content = save_file.readline()
+                        print(inner_content)
+                        if inner_content == "1\n":
+                            print("Hello ladies and gentlemen!\n")
+                        elif inner_content == "2\n":
+                            print("Hello lasse!\n")
+                        elif inner_content == "3\n":
+                            print("Are you robots?!\n")
+
+                    # read player turn
+                    elif (line == "player_turn\n"):
+                        print("Li o player_turn!\n")
+                        inner_content = save_file.readline()
+                        print(inner_content)
+                        if inner_content == "BLACK\n":
+                            print("Hello player1!\n")
+                        elif inner_content == "WHITE\n":
+                            print("Hello player 2!\n")
+                    
+                    # read board
+                    elif (line == "board\n"):
+                        print("Li o board!\n")
+                        valid_board = True
+                        for board_index in range(4):    
+                            for board_cell in range(16):
+                                inner_content = save_file.readline()
+                                if (inner_content == "0\n"):
+                                    print("blank cell\n")
+                                elif (inner_content == "(0, 0, 0)\n"):
+                                    print("black piece\n")
+                                elif (inner_content == "(255, 255, 255)\n"):
+                                    print("white piece\n")
+                                else:
+                                    print("invalid board content\n")
+                                    valid_board = False
+                                    break
+                            if not valid_board:
+                                print("file reading aborted! In board index: " + str(board_index))
+                                break
+                            print(str(board_index) + " board added!")
+
+
+                
+
+                save_file.close()
+                
+
+                if valid_board:
+                    print("Game state imported!!!\n")
+
+            except FileNotFoundError:
+                print("There isn't a game save in the root!\n")
+
+            input_done = False
+
+    input_done = True
+
+
+            
+
+    print(
+
+        "9. Back")
+    print(
+        "0. Quit")
+    choice = input(" >>  ")
+    exec_menu(choice)
+    return
 
 # Back to main menu
 def back():
@@ -383,6 +502,7 @@ menu_actions = {
     '1': menu1,
     '2': menu2,
     '3': menu3,
+    '4': menu4,
 
     '9': back,
     '0': exit,

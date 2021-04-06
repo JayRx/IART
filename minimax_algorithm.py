@@ -3,13 +3,18 @@ from shobu.State.State import State, MinimaxState
 from shobu.Model.constants import BLACK, WHITE, SQUARE_SIZE, BOARD_OUTLINE
 from shobu.Heuristics.Heuristics import Heuristics
 
+import globals
+
 class Minimax:
     def __init__(self, player1, player2):
         self.player1 = player1
         self.player2 = player2
+        globals.initialize()
+        print(globals.it)
 
     # depth - depth of the search tree
     def minimax(self, boards, depth, max_player, game_controller, alpha, beta):
+        globals.it += 1
         # in depth 0 of the tree
         if depth == 0 or game_controller.objective_test(boards, self.player2) != -1:
             # this means that in this board, we have a winner

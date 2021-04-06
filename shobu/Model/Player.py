@@ -275,6 +275,9 @@ class Player:
     def set_active_moves(self, active_moves):
         self.__aggressive_moves = active_moves
 
+    def set_boards(self, boards):
+        self.__boards = boards
+
 
 def player_play(game, game_view, player, player_view,
                 ):

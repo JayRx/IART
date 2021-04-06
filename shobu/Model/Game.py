@@ -20,3 +20,7 @@ class Game:
 
     def ai_movement(self, boards):
         self.__boards = boards
+        # player1_boards = boards[2], boards[3]
+        # player2_boards = boards[0], boards[1]
+        # self.__player1.set_boards(player1_boards)
+        # self.__player2.set_boards(player2_boards)

@@ -129,3 +129,23 @@ class Board:
         row, col = row + vector_move[0], col + vector_move[1]
         self.change_piece_cell(piece, (row, col))
         return True
+
+    def print_all_pieces(self, player_color):
+        pieces = []
+        
+        for row in range(ROWS):
+            for col in range(COLS):
+                # if cell has a piece
+                if (self.__board_info[row][col] != 0) :
+                    current_piece = self.__board_info[row][col] 
+                    if (current_piece.get_color() == player_color):
+                        print(str(current_piece) + "|")
+
+    def print_all_board(self):
+        for row in range(ROWS):
+            for col in range(COLS):
+                # if cell has a piece
+                if (self.__board_info[row][col] != 0) :
+                    current_piece = self.__board_info[row][col] 
+                    print(str(current_piece) + "|")                        
+        
