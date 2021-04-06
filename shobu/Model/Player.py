@@ -270,6 +270,11 @@ class Player:
     def get_boards(self):
         return self.__boards
 
+    def get_board(self,board):
+        for x in self.get_boards():
+            if x.get_index() == board.get_index():
+                return x
+
     def set_active_moves(self, active_moves):
         self.__aggressive_moves = active_moves
 
@@ -551,6 +556,7 @@ def get_mouse_pos():
             continue
 
     return pos
+
 
 
 def obtain_opposite_color_boards(self, color_board_played):

@@ -158,8 +158,8 @@ def menu2():
               Board(1, 1, LIGHT_BROWN, 3)]
     # Passive move
 
-    player1 = Player(BLACK, (boards[2], boards[3]))
-    computer = Player(WHITE, (boards[0], boards[1]))
+    player1 = Player(WHITE, (boards[2], boards[3]))
+    computer = Player(BLACK, (boards[0], boards[1]))
 
     game = Game(boards, player1, computer)
 
@@ -184,12 +184,12 @@ def menu2():
         choice = input(" >>  ")
 
         if int(choice) == 4:
-            difficulty = 1
+            difficulty = 0
             # computador1 easy/ minimax alocar
             input_done = False
         elif int(choice) == 5:
             # computador1 medium/ minimax alocar computer1
-            difficulty = 2
+            difficulty = 1
             input_done = False
         elif int(choice) == 6:
             # computador1 hard/ minimax alocar computer1
@@ -202,6 +202,13 @@ def menu2():
 
     while run:
 
+        time.sleep(2)
+        aux_game = best_move_max_p1(game, 1)
+
+        game = deepcopy(aux_game)
+        game_view.draw_game(game)
+        winner = check_winner(game_controller, game, computer)
+
         player_play(game, game_view, player1,
                     player1_view)
         game_view.draw_game(game)
@@ -212,15 +219,10 @@ def menu2():
 
         # Player 2 is the white player (is the ai)
 
-        """minmaxAlgorithm = Minimax(player1, computer)
-        value, new_boards = minmaxAlgorithm.minimax(game.get_boards(), difficulty, WHITE, game_controller, float('-1000'), float('1000'))
-        """
-        time.sleep(2)
-        aux_game = best_move_min_p2(game, difficulty)
+        # minmaxAlgorithm = Minimax(player1, computer)
+        # value, new_boards = minmaxAlgorithm.minimax(game.get_boards(), difficulty, WHITE, game_controller, float('-1000'), float('1000'))
 
-        game = aux_game
-        game_view.draw_game(game)
-        winner = check_winner(game_controller, game, computer)
+
         if winner:
             run = False
 
