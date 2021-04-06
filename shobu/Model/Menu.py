@@ -440,6 +440,8 @@ def menu4():
 
                 # import of game structures
 
+                valid_board = True
+
                 for line in save_file:
                     #print(line)
 
@@ -447,12 +449,12 @@ def menu4():
                     if (line == "mode\n"):
                         print("Li o mode!\n")
                         mode_content = save_file.readline()
-                        print(inner_content)
-                        if inner_content == "1\n":
+                        print(mode_content)
+                        if mode_content == "1\n":
                             print("Hello ladies and gentlemen!\n")
-                        elif inner_content == "2\n":
+                        elif mode_content == "2\n":
                             print("Hello lasse!\n")
-                        elif inner_content == "3\n":
+                        elif mode_content == "3\n":
                             print("Are you robots?!\n")
 
                     # read player turn
